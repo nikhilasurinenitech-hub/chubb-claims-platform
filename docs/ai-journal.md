@@ -48,3 +48,5 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Visual inspection covered desktop reporting, claimant information response and mobile layout. No clipping or horizontal overflow was found.
 - Audited the runtime data before cleanup: eight untouched seed claims and eight automated-test claims, with no unknown records. Backed up the fixtures and reset only this project. A fresh start produced eight claims, eight projections and no pending events.
 - The user has not yet completed a line-by-line review. These checks and corrections are AI work, not invented candidate overrides.
+
+- Removed unused IDE launch scaffolding and an empty stylesheet so the supported entry points remain the documented Compose run, build and test commands.
