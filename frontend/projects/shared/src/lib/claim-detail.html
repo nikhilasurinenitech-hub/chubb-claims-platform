@@ -1,0 +1,162 @@
+<section class="panel detail-panel" aria-label="Selected claim">
+  <div class="detail-heading">
+    <div>
+      <p class="eyebrow">{{ detail().claim.reference }}</p>
+      <h2>Claim overview</h2>
+    </div>
+    <button class="icon-button" (click)="close.emit()" aria-label="Close claim details">✕</button>
+  </div>
+  <claim-status [value]="detail().claim.status" />
+  <p class="claim-description">{{ detail().claim.description }}</p>
+  <dl class="facts">
+    <div>
+      <dt>Incident</dt>
+      <dd>
+        {{ detail().claim.type === 'MOTOR' ? 'Motor' : 'Property' }} ·
+        {{ detail().claim.incidentDate | date: 'dd MMM yyyy' }}
+      </dd>
+    </div>
+    <div>
+      <dt>Location</dt>
+      <dd>{{ detail().claim.location }} · {{ detail().claim.market }}</dd>
+    </div>
+    <div>
+      <dt>Requested</dt>
+      <dd>{{ detail().claim.requestedAmount | money: detail().claim.currency }}</dd>
+    </div>
+    <div>
+      <dt>Assessed reserve</dt>
+      <dd>{{ detail().claim.reserveAmount | money: detail().claim.currency }}</dd>
+    </div>
+    <div>
+      <dt>Assigned officer</dt>
+      <dd>{{ detail().claim.assignee || 'Waiting for assignment' }}</dd>
+    </div>
+    <div>
+      <dt>Last updated</dt>
+      <dd>{{ detail().claim.updatedAt | date: 'dd MMM, HH:mm' }}</dd>
+    </div>
+  </dl>
+  @if (detail().claim.status === 'SETTLED') {
+    <div class="decision">
+      <strong>Settlement recorded</strong>
+      <p>{{ detail().claim.settlementAmount | money: detail().claim.currency }}</p>
+      <small>This demo records the decision. It does not transfer funds.</small>
+    </div>
+  }
+  @if (detail().claim.status === 'REJECTED') {
+    <div class="decision">
+      <strong>Claim rejected</strong>
+      <p>{{ detail().history[detail().history.length - 1]?.note }}</p>
+    </div>
+  }
+  @if (role() === 'STAFF' && detail().claim.status === 'SUBMITTED') {
+    <button class="primary wide" [disabled]="busy()" (click)="emit('assign')">
+      Pick up this claim
+    </button>
+  }
+  @if (role() === 'STAFF' && own() && detail().claim.status === 'UNDER_REVIEW') {
+    <div class="action-box">
+      <h3>Review and progress</h3>
+      <label for="officer-note">Assessment, question or decision reason</label
+      ><textarea
+        id="officer-note"
+        rows="3"
+        [(ngModel)]="note"
+        maxlength="2000"
+        placeholder="Record the reasoning behind your action"
+      ></textarea
+      ><label for="reserve">Assessed reserve ({{ detail().claim.currency }})</label
+      ><input
+        id="reserve"
+        type="number"
+        min="0"
+        [step]="detail().claim.currency === 'JPY' ? 1 : 0.01"
+        [(ngModel)]="amount"
+      />
+      <div class="button-row">
+        <button
+          class="primary"
+          [disabled]="busy() || note.trim().length < 5 || !amount || amount <= 0"
+          (click)="emit('assessment')"
+        >
+          Save assessment</button
+        ><button
+          [disabled]="busy() || note.trim().length < 5"
+          (click)="emit('information-requests')"
+        >
+          Request information
+        </button>
+      </div>
+      <div class="button-row">
+        <button [disabled]="busy() || detail().claim.reserveAmount <= 0" (click)="emit('approve')">
+          Approve claim</button
+        ><button
+          class="danger"
+          [disabled]="busy() || note.trim().length < 5"
+          (click)="emit('reject')"
+        >
+          Reject claim
+        </button>
+      </div>
+      <small
+        >Approval requires a saved assessment. Requests and rejections require a clear
+        reason.</small
+      >
+    </div>
+  }
+  @if (role() === 'STAFF' && own() && detail().claim.status === 'APPROVED') {
+    <div class="action-box">
+      <h3>Record settlement</h3>
+      <label for="settlement">Settlement amount ({{ detail().claim.currency }})</label
+      ><input
+        id="settlement"
+        type="number"
+        min="0"
+        [max]="detail().claim.reserveAmount"
+        [step]="detail().claim.currency === 'JPY' ? 1 : 0.01"
+        [(ngModel)]="amount"
+      /><label for="settlement-note">Settlement note</label
+      ><textarea id="settlement-note" rows="2" [(ngModel)]="note" maxlength="2000"></textarea
+      ><button
+        class="primary wide"
+        [disabled]="busy() || !amount || amount <= 0 || amount > detail().claim.reserveAmount"
+        (click)="emit('settle')"
+      >
+        Confirm settlement
+      </button>
+    </div>
+  }
+  @if (role() === 'STAFF' && detail().claim.assignee && !own()) {
+    <p class="muted">{{ detail().claim.assignee }} is responsible for progressing this claim.</p>
+  }
+  @if (openRequest(); as request) {
+    <div class="action-box">
+      <p class="eyebrow">Information requested</p>
+      <p>{{ request.question }}</p>
+      @if (role() === 'CLAIMANT') {
+        <label for="claim-answer">Your response</label
+        ><textarea id="claim-answer" rows="3" [(ngModel)]="answer" maxlength="4000"></textarea
+        ><button
+          class="primary wide"
+          [disabled]="busy() || answer.trim().length < 2"
+          (click)="answerRequest()"
+        >
+          Send response
+        </button>
+      } @else {
+        <small>Waiting for the claimant to respond.</small>
+      }
+    </div>
+  }
+  <h3 class="section-title">Claim history</h3>
+  <ol class="timeline">
+    @for (event of detail().history.slice().reverse(); track event.id) {
+      <li>
+        <strong>{{ event.action.replaceAll('_', ' ').toLowerCase() }}</strong>
+        <p>{{ event.note }}</p>
+        <small>{{ event.actor }} · {{ event.occurredAt | date: 'dd MMM yyyy, HH:mm' }}</small>
+      </li>
+    }
+  </ol>
+</section>

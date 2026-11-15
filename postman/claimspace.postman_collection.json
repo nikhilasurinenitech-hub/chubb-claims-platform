@@ -1,0 +1,614 @@
+{
+  "info": {
+    "name": "Claimspace Complete Workflow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Run in order. Demo-only identities; no real payments. Reporting is asynchronous."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "password",
+      "value": "ClaimsDemo!2026"
+    },
+    {
+      "key": "claimId",
+      "value": ""
+    },
+    {
+      "key": "requestId",
+      "value": ""
+    },
+    {
+      "key": "version",
+      "value": "0"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Read claimant identity",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "maya",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/session"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Market reference data",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "maya",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/markets"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Submit claim",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "maya",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"type\": \"MOTOR\", \"market\": \"SG\", \"incidentDate\": \"2026-01-01\", \"location\": \"Fictional Singapore car park\", \"description\": \"Fictional parked vehicle damage for API walkthrough\", \"requestedAmount\": 5000}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(201); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 View claimant queue",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "maya",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 assign",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "alex",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims/{{claimId}}/assign",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":{{version}},\"note\":\"Picked up for review\",\"amount\":null}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 information-requests",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "alex",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims/{{claimId}}/information-requests",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":{{version}},\"note\":\"Please provide a repair estimate\",\"amount\":null}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Claimant answers",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "maya",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims/{{claimId}}/information-requests/{{requestId}}/response",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":{{version}},\"answer\":\"The fictional repair estimate totals SGD 4000.\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 assessment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "alex",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims/{{claimId}}/assessment",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":{{version}},\"note\":\"Repair estimate reviewed\",\"amount\":4000}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 approve",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "alex",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims/{{claimId}}/approve",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":{{version}},\"note\":\"Assessment approved\",\"amount\":null}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 settle",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "alex",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims/{{claimId}}/settle",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":{{version}},\"note\":\"Settlement recorded for the demo\",\"amount\":3800}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Claimant final decision",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "maya",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/claims/{{claimId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Team reporting",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "alex",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/insights"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Outbox status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "alex",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/operations"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Expected response\", function () { pm.response.to.have.status(200); });",
+              "const data=pm.response.json();",
+              "if(data.claim){pm.collectionVariables.set(\"claimId\",data.claim.id);pm.collectionVariables.set(\"version\",data.claim.version);}",
+              "if(data.informationRequests){const pending=data.informationRequests.find(r=>!r.answeredAt);if(pending)pm.collectionVariables.set(\"requestId\",pending.id);}"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

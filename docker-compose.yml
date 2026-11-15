@@ -1,0 +1,135 @@
+name: chubb-claims-platform
+services:
+  postgres:
+    image: '${POSTGRES_IMAGE:-docker.io/library/postgres:17-alpine}'
+    environment:
+      POSTGRES_DB: claims_platform
+      POSTGRES_PASSWORD: local-admin-only
+    volumes:
+    - postgres-data:/var/lib/postgresql/data
+    - ./deploy/postgres/01-create-services.sql:/docker-entrypoint-initdb.d/01-create-services.sql:ro
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres -d claims_platform
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+  kafka:
+    image: '${KAFKA_IMAGE:-docker.io/apache/kafka:4.1.0}'
+    hostname: kafka
+    environment:
+      KAFKA_NODE_ID: '1'
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:29092,CONTROLLER://:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: '1'
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: '0'
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    volumes:
+    - kafka-data:/tmp/kraft-combined-logs
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:29092
+        >/dev/null 2>&1
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+  claims-service:
+    image: localhost/claimspace/claims:${APP_TAG:-1.0.0}
+    build:
+      context: ./backend
+      args:
+        SERVICE: claims-service
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/claims_platform?currentSchema=claims
+      DB_USER: claims_app
+      DB_PASSWORD: local-claims-only
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      DEMO_PASSWORD: '${DEMO_PASSWORD:-ClaimsDemo!2026}'
+      DEMO_SEED: '${DEMO_SEED:-true}'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD
+      - java
+      - -cp
+      - /app/health
+      - com.example.platform.Healthcheck
+      - '8081'
+      interval: 10s
+      timeout: 6s
+      retries: 20
+      start_period: 25s
+    read_only: true
+    tmpfs:
+    - /tmp:rw,nosuid,size=128m
+    restart: unless-stopped
+  insights-service:
+    image: localhost/claimspace/insights:${APP_TAG:-1.0.0}
+    build:
+      context: ./backend
+      args:
+        SERVICE: insights-service
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/claims_platform?currentSchema=insights
+      DB_USER: insights_app
+      DB_PASSWORD: local-insights-only
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      DEMO_PASSWORD: '${DEMO_PASSWORD:-ClaimsDemo!2026}'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD
+      - java
+      - -cp
+      - /app/health
+      - com.example.platform.Healthcheck
+      - '8082'
+      interval: 10s
+      timeout: 6s
+      retries: 20
+      start_period: 25s
+    read_only: true
+    tmpfs:
+    - /tmp:rw,nosuid,size=128m
+    restart: unless-stopped
+  web:
+    image: localhost/claimspace/web:${APP_TAG:-1.0.0}
+    build: ./frontend
+    ports:
+    - 127.0.0.1:${WEB_PORT:-8080}:8080
+    depends_on:
+      claims-service:
+        condition: service_healthy
+      insights-service:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -q -O /dev/null http://127.0.0.1:8080/health/web && wget -q -O /dev/null
+        http://127.0.0.1:8080/health/claims && wget -q -O /dev/null http://127.0.0.1:8080/health/insights
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+volumes:
+  postgres-data: null
+  kafka-data: null

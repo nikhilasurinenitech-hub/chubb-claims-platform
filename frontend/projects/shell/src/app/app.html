@@ -1,0 +1,111 @@
+<a class="skip-link" href="#main-content">Skip to main content</a>
+@if (auth.session(); as session) {
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a class="brand" [routerLink]="session.role === 'STAFF' ? '/staff' : '/claimant'"
+        ><span class="brand-mark" aria-hidden="true">C<span>•</span></span
+        ><span
+          >Claim<span class="brand-light">space</span><small>APAC CLAIMS PLATFORM</small></span
+        ></a
+      >
+      <p class="nav-label">WORKSPACE</p>
+      <nav aria-label="Main navigation">
+        @if (session.role === 'STAFF') {
+          <a routerLink="/staff" routerLinkActive="active"
+            ><span aria-hidden="true">▦</span>Claims operations</a
+          >
+        } @else {
+          <a routerLink="/claimant" routerLinkActive="active"
+            ><span aria-hidden="true">◇</span>My claims</a
+          >
+        }
+      </nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span> Assessment environment
+        <p>Six markets.<br />One connected claims journey.</p>
+      </div>
+      <div class="profile">
+        <span class="avatar">{{ session.username[0].toUpperCase() }}</span>
+        <div>
+          <strong>{{ session.username }}</strong
+          ><small>{{ session.role === 'STAFF' ? 'Claims officer' : 'Claimant' }}</small>
+        </div>
+        <button class="signout" (click)="logout()" aria-label="Sign out">↪</button>
+      </div>
+    </aside>
+    <div class="main-area">
+      <header class="topbar">
+        <span
+          >APAC <span class="breadcrumb-separator">/</span>
+          {{ session.role === 'STAFF' ? 'Claims operations' : 'Claimant portal' }}</span
+        ><span class="environment"><span class="live-dot"></span> Local demo</span>
+      </header>
+      <main id="main-content" tabindex="-1"><router-outlet /></main>
+      <footer>
+        Claimspace · Motor & property claims <span>Fictional data · Assessment demo</span>
+      </footer>
+    </div>
+  </div>
+} @else {
+  <main id="main-content" class="login-layout">
+    <section class="login-story">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">C<span>•</span></span
+        ><span>Claim<span class="brand-light">space</span></span>
+      </div>
+      <div>
+        <p class="eyebrow">CONNECTED CLAIMS. CLEARER OUTCOMES.</p>
+        <h1>Every claim deserves<br />a clear next step.</h1>
+        <p>
+          One workspace connecting claimants and claims teams, from the first report to the final
+          decision.
+        </p>
+        <div class="journey" aria-label="Claim journey">
+          <span>01<small>Report</small></span
+          ><i></i><span>02<small>Review</small></span
+          ><i></i><span>03<small>Resolve</small></span>
+        </div>
+      </div>
+      <small>APAC engineering · Full stack assessment</small>
+    </section>
+    <section class="login-form">
+      <div class="login-card">
+        <p class="eyebrow">WELCOME TO CLAIMSPACE</p>
+        <h2>Your claims workspace</h2>
+        <p class="muted">Choose a demo account to explore the complete claims journey.</p>
+        <claim-feedback [message]="error()" />
+        <form #loginForm="ngForm" (ngSubmit)="login()">
+          <label for="username">Demo account</label
+          ><select id="username" name="username" [(ngModel)]="username" [disabled]="busy()">
+            <optgroup label="Claimants">
+              <option value="maya">Maya · claimant</option>
+              <option value="leo">Leo · claimant</option>
+            </optgroup>
+            <optgroup label="Claims officers">
+              <option value="alex">Alex · claims officer</option>
+              <option value="priya">Priya · claims officer</option>
+            </optgroup></select
+          ><label for="password">Password</label
+          ><input
+            id="password"
+            name="password"
+            type="password"
+            [(ngModel)]="password"
+            required
+            autocomplete="current-password"
+            [disabled]="busy()"
+          /><button class="primary wide" type="submit" [disabled]="loginForm.invalid || busy()">
+            {{ busy() ? 'Signing in…' : 'Enter workspace →' }}
+          </button>
+        </form>
+        <div class="demo-note">
+          <strong>A safe place to explore</strong>
+          <p>
+            All four demo accounts use <code>ClaimsDemo!2026</code>. Use fictional incident
+            information. These identities are for local assessment only.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+}

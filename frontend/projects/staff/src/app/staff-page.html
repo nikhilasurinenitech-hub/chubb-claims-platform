@@ -1,0 +1,215 @@
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">CLAIMS OPERATIONS</p>
+    <h1>A clear view of every claim.</h1>
+    <p class="muted">Prioritise your queue, support claimants and make informed decisions.</p>
+  </div>
+  <button (click)="refresh()" [disabled]="loading() || reportLoading()">↻ Refresh workspace</button>
+</div>
+<claim-feedback [message]="error()" /><claim-feedback
+  [message]="notice()"
+  kind="notice"
+/><claim-feedback [message]="reportError()" />
+@if (dashboard(); as d) {
+  <div class="metrics">
+    <button class="metric" (click)="queue('')">
+      <span>All claims</span><strong>{{ d.totalClaims }}</strong
+      ><small>Across the selected market</small>
+    </button>
+    <div class="metric">
+      <span>Open claims</span><strong>{{ d.openClaims }}</strong
+      ><small>Awaiting a final decision</small>
+    </div>
+    <button class="metric" (click)="queue('AWAITING_INFORMATION')">
+      <span>Waiting on information</span><strong>{{ d.byStatus['AWAITING_INFORMATION'] }}</strong
+      ><small>Claimant response requested</small>
+    </button>
+    <div class="metric">
+      <span>Average resolution</span
+      ><strong>{{ d.averageClosureHours | number: '1.1-1' }}<em>h</em></strong
+      ><small>Submitted to final decision</small>
+    </div>
+  </div>
+  <div class="report-grid">
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">TEAM CAPACITY</p>
+          <h2>Workload</h2>
+        </div>
+        <span class="subtle-tag">{{ d.closedClaims }} closed</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Officer</th>
+              <th scope="col">Open</th>
+              <th scope="col">Waiting</th>
+              <th scope="col">Closed</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (o of d.officers; track o.username) {
+              <tr>
+                <th scope="row">{{ o.username }}</th>
+                <td>{{ o.open }}</td>
+                <td>{{ o.waiting }}</td>
+                <td>{{ o.closed }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="4">Workload appears when the first claim is processed.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">LIABILITY OVERVIEW</p>
+          <h2>Outstanding reserves</h2>
+        </div>
+      </div>
+      <div class="exposure-list">
+        @for (e of d.exposure; track e.currency) {
+          <div class="exposure">
+            <div>
+              <strong>{{ e.outstandingReserve | money: e.currency }}</strong
+              ><small>{{ e.unassessedClaims }} open claim(s) without an assessment</small>
+            </div>
+            <span>{{ e.currency }}</span>
+          </div>
+        } @empty {
+          <p class="muted">Reserves appear after claims are assessed.</p>
+        }
+      </div>
+      <p class="report-note">
+        Currencies are shown separately. Unassessed claims are excluded from reserve totals.
+      </p>
+    </section>
+  </div>
+  <p class="freshness">
+    Kafka reporting ·
+    {{
+      d.lastUpdated
+        ? 'Last processed ' + (d.lastUpdated | date: 'dd MMM, HH:mm:ss')
+        : 'Waiting for the first event'
+    }}
+    · Updates are asynchronous.
+  </p>
+} @else {
+  <div class="panel empty" role="status">
+    {{
+      reportLoading()
+        ? 'Loading team reporting…'
+        : 'Reporting is unavailable. Claim processing remains available below.'
+    }}
+  </div>
+}
+<div class="workspace" [class.with-detail]="selected()">
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">WORK QUEUE</p>
+        <h2>
+          Claims <span class="count">{{ total }}</span>
+        </h2>
+      </div>
+    </div>
+    <form class="filters" (ngSubmit)="filter()">
+      <div>
+        <label for="staff-search">Search claims</label
+        ><input
+          id="staff-search"
+          name="search"
+          [(ngModel)]="search"
+          placeholder="Reference or incident details"
+          [disabled]="loading()"
+        />
+      </div>
+      <div>
+        <label for="staff-status">Status</label
+        ><select id="staff-status" name="status" [(ngModel)]="status" [disabled]="loading()">
+          <option value="">All statuses</option>
+          @for (s of statuses; track s[0]) {
+            <option [value]="s[0]">{{ s[1] }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <label for="staff-market">Market</label
+        ><select id="staff-market" name="market" [(ngModel)]="market" [disabled]="loading()">
+          <option value="">All markets</option>
+          <option value="SG">Singapore</option>
+          <option value="AU">Australia</option>
+          <option value="HK">Hong Kong</option>
+          <option value="JP">Japan</option>
+          <option value="MY">Malaysia</option>
+          <option value="NZ">New Zealand</option>
+        </select>
+      </div>
+      <div>
+        <label for="staff-assignee">Assignment</label
+        ><select id="staff-assignee" name="assignee" [(ngModel)]="assignee" [disabled]="loading()">
+          <option value="">Whole team</option>
+          <option value="me">My claims</option>
+        </select>
+      </div>
+      <button type="submit" [disabled]="loading()">Apply</button>
+    </form>
+    @if (loading()) {
+      <p class="empty" role="status">Loading claims…</p>
+    } @else {
+      <div class="claim-list">
+        @for (c of claims(); track c.id) {
+          <button
+            class="claim-row"
+            [class.selected]="selected()?.claim?.id === c.id"
+            (click)="choose(c.id)"
+          >
+            <span class="claim-icon" aria-hidden="true">{{ c.type === 'MOTOR' ? '↗' : '⌂' }}</span
+            ><span class="claim-row-main"
+              ><strong>{{ c.reference }}</strong
+              ><span
+                >{{ c.type === 'MOTOR' ? 'Motor' : 'Property' }} · {{ c.market }} ·
+                {{ c.claimantId }}</span
+              ><small
+                >{{ c.assignee || 'Unassigned' }} · Updated
+                {{ c.updatedAt | date: 'dd MMM, HH:mm' }}</small
+              ></span
+            ><span class="claim-row-end"
+              ><claim-status [value]="c.status" /><strong>{{
+                c.requestedAmount | money: c.currency
+              }}</strong></span
+            ><span aria-hidden="true">›</span>
+          </button>
+        } @empty {
+          <div class="empty">
+            <h3>Your queue is clear</h3>
+            <p>No claims match these filters.</p>
+          </div>
+        }
+      </div>
+    }
+    <div class="pagination">
+      <small>{{ total }} claim{{ total === 1 ? '' : 's' }} · Page {{ page + 1 }}</small>
+      <div>
+        <button [disabled]="page === 0 || loading()" (click)="next(-1)">Previous</button
+        ><button [disabled]="(page + 1) * 10 >= total || loading()" (click)="next(1)">Next</button>
+      </div>
+    </div>
+  </section>
+  @if (selected(); as detail) {
+    <claim-detail
+      [detail]="detail"
+      role="STAFF"
+      [username]="auth.session()!.username"
+      [busy]="busy()"
+      (action)="act($event)"
+      (close)="close()"
+    />
+  }
+</div>

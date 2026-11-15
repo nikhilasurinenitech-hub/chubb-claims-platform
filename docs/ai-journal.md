@@ -23,3 +23,13 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Recreated the newly created empty Podman VM after its interrupted first boot left a Linux account lock. A persistent terminal allowed clean initialisation; the VM responds on ARM64.
 - Full backend `mvn verify` passed: ten unit tests and six PostgreSQL integration tests. Kafka transport remains to be exercised in the full-system test.
 - Angular registry checks found CLI 22.2.7 and framework 22.2.6. Corrected the initial assumption that patch numbers matched. Federation adapter is 22.2.5. Dependency installation reported zero vulnerabilities at that point.
+
+## Frontend and packaging
+
+- Built one Angular workspace with a shell and separately built claimant/staff remotes, shared via Native Federation. Shared UI includes status, currency, feedback and detail presentation. Feature pages own HTTP state.
+- Added ten component/authentication tests covering readable statuses, currency precision, accessible error feedback, credential lifetime, preventing credentials on non-API requests, permission-based actions and preserving draft text during pending requests. All ten passed.
+- All three Angular production builds passed. Added five-second reporting refresh with teardown on navigation and paused polling for hidden tabs.
+- Refined claims layering: controllers delegate to the application service; application contracts and the ClaimStore port belong to the service layer; the PostgreSQL adapter implements that port. Domain objects have no Spring annotations.
+- Added client-error tests for missing required headers and malformed IDs, and reran the full backend suite: 17 tests passed.
+- Added a compacted Kafka topic so current snapshots can be replayed, atomic demo seeding, and health probes using a small Java class instead of adding shell utilities to runtime images.
+- Initial Dockerfile builds succeeded. Full-system browser, transport and recovery checks are next; no success has been claimed for these yet.

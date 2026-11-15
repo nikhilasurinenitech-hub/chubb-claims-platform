@@ -1,0 +1,172 @@
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">YOUR CLAIMS, CLEARLY</p>
+    <h1>Here when you need us.</h1>
+    <p class="muted">Report an incident and stay informed, from first notice to final decision.</p>
+  </div>
+  <button class="primary" (click)="showForm.set(!showForm())">
+    {{ showForm() ? 'Close form' : '+ Report an incident' }}
+  </button>
+</div>
+<claim-feedback [message]="error()" /><claim-feedback [message]="notice()" kind="notice" />
+@if (showForm()) {
+  <section class="panel submission">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">FIRST NOTICE OF LOSS</p>
+        <h2>Tell us what happened</h2>
+      </div>
+      <span class="subtle-tag">Motor & property</span>
+    </div>
+    <p class="muted">
+      Use fictional information for this assessment demo. Fields marked * are required.
+    </p>
+    <form #claimForm="ngForm" (ngSubmit)="create()">
+      <fieldset [disabled]="busy()">
+        <div class="form-grid">
+          <div>
+            <label for="claim-type">Claim type *</label
+            ><select id="claim-type" name="type" [(ngModel)]="form.type" required>
+              <option value="MOTOR">Motor</option>
+              <option value="PROPERTY">Property</option>
+            </select>
+          </div>
+          <div>
+            <label for="market">Market *</label
+            ><select id="market" name="market" [(ngModel)]="form.market" required>
+              @for (m of markets(); track m.code) {
+                <option [value]="m.code">{{ m.name }} · {{ m.currency }}</option>
+              }
+            </select>
+          </div>
+          <div>
+            <label for="incident-date">Incident date *</label
+            ><input
+              id="incident-date"
+              name="incidentDate"
+              type="date"
+              [(ngModel)]="form.incidentDate"
+              [max]="today"
+              required
+            />
+          </div>
+          <div>
+            <label for="requested-amount">Estimated amount ({{ currency() }}) *</label
+            ><input
+              id="requested-amount"
+              name="amount"
+              type="number"
+              [(ngModel)]="form.requestedAmount"
+              [min]="currency() === 'JPY' ? 1 : 0.01"
+              max="999999999999.99"
+              [step]="currency() === 'JPY' ? 1 : 0.01"
+              required
+            />
+          </div>
+          <div class="full">
+            <label for="incident-location">Incident location *</label
+            ><input
+              id="incident-location"
+              name="location"
+              [(ngModel)]="form.location"
+              maxlength="200"
+              required
+              placeholder="City and location of the incident"
+            />
+          </div>
+          <div class="full">
+            <label for="incident-description">What happened? *</label
+            ><textarea
+              id="incident-description"
+              name="description"
+              rows="4"
+              [(ngModel)]="form.description"
+              minlength="10"
+              maxlength="4000"
+              required
+              placeholder="Describe the incident and damage (at least 10 characters)"
+            ></textarea>
+          </div>
+        </div>
+        <div class="form-footer">
+          <small>You can provide more information when your officer requests it.</small
+          ><button class="primary" type="submit" [disabled]="claimForm.invalid || busy()">
+            {{ busy() ? 'Submitting…' : 'Submit claim' }}
+          </button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+}
+<div class="workspace" [class.with-detail]="selected()">
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">CLAIM TRACKER</p>
+        <h2>
+          My claims <span class="count">{{ total }}</span>
+        </h2>
+      </div>
+      <button (click)="load()" [disabled]="loading()">Refresh</button>
+    </div>
+    <div class="filter-row">
+      <label for="claim-filter">Status</label
+      ><select id="claim-filter" [(ngModel)]="status" (change)="filter()" [disabled]="loading()">
+        <option value="">All statuses</option>
+        <option value="SUBMITTED">Submitted</option>
+        <option value="UNDER_REVIEW">Under review</option>
+        <option value="AWAITING_INFORMATION">Needs information</option>
+        <option value="APPROVED">Approved</option>
+        <option value="SETTLED">Settled</option>
+        <option value="REJECTED">Rejected</option>
+      </select>
+    </div>
+    @if (loading()) {
+      <p class="empty" role="status">Loading your claims…</p>
+    } @else {
+      <div class="claim-list">
+        @for (c of claims(); track c.id) {
+          <button
+            class="claim-row"
+            [class.selected]="selected()?.claim?.id === c.id"
+            (click)="choose(c.id)"
+          >
+            <span class="claim-icon" aria-hidden="true">{{ c.type === 'MOTOR' ? '↗' : '⌂' }}</span
+            ><span class="claim-row-main"
+              ><strong>{{ c.reference }}</strong
+              ><span>{{ c.type === 'MOTOR' ? 'Motor' : 'Property' }} · {{ c.location }}</span
+              ><small>Reported {{ c.createdAt | date: 'dd MMM yyyy' }}</small></span
+            ><span class="claim-row-end"
+              ><claim-status [value]="c.status" /><strong>{{
+                c.requestedAmount | money: c.currency
+              }}</strong></span
+            ><span aria-hidden="true">›</span>
+          </button>
+        } @empty {
+          <div class="empty">
+            <span class="empty-icon" aria-hidden="true">◇</span>
+            <h3>No claims here yet</h3>
+            <p>Report an incident to start tracking its progress.</p>
+          </div>
+        }
+      </div>
+    }
+    <div class="pagination">
+      <small>{{ total }} claim{{ total === 1 ? '' : 's' }} · Page {{ page + 1 }}</small>
+      <div>
+        <button [disabled]="page === 0 || loading()" (click)="next(-1)">Previous</button
+        ><button [disabled]="(page + 1) * 10 >= total || loading()" (click)="next(1)">Next</button>
+      </div>
+    </div>
+  </section>
+  @if (selected(); as detail) {
+    <claim-detail
+      [detail]="detail"
+      role="CLAIMANT"
+      [username]="auth.session()!.username"
+      [busy]="busy()"
+      (response)="respond($event)"
+      (close)="close()"
+    />
+  }
+</div>
