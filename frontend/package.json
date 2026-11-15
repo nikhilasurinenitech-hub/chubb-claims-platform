@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve shell",
     "build": "ng build claimant && ng build staff && ng build shell",
     "test": "ng test shared --watch=false",
     "e2e": "playwright test",

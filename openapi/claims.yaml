@@ -319,8 +319,15 @@ paths:
                     type: string
                     minLength: 5
                     maxLength: 2000
+                  amount:
+                    type: number
+                    minimum: 0.01
+                    maximum: 999999999999.99
+                    description: Positive amount with valid market currency precision;
+                      settlement cannot exceed the assessed reserve.
                 required:
                 - note
+                - amount
       parameters:
       - *id006
   /api/claims/{id}/approve:
@@ -378,7 +385,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Command'
+              allOf:
+              - $ref: '#/components/schemas/Command'
+              - type: object
+                properties:
+                  amount:
+                    type: number
+                    minimum: 0.01
+                    maximum: 999999999999.99
+                    description: Positive amount with valid market currency precision;
+                      settlement cannot exceed the assessed reserve.
+                required:
+                - amount
       parameters:
       - *id006
   /api/claims/{id}/reject:
@@ -503,7 +521,6 @@ paths:
                 properties:
                   pendingEvents:
                     type: integer
-                required: &id008 []
         '400': *id001
         '401': *id002
         '403': *id003
@@ -674,7 +691,6 @@ components:
         occurredAt:
           type: string
           format: date-time
-      required: *id008
     InformationRequest:
       type: object
       properties:
@@ -695,7 +711,6 @@ components:
           type: string
           format: date-time
           nullable: true
-      required: *id008
     Detail:
       type: object
       properties:
@@ -779,7 +794,6 @@ components:
             type: string
         traceId:
           type: string
-      required: *id008
     Dashboard:
       type: object
       properties:
@@ -810,7 +824,6 @@ components:
                 type: integer
               closed:
                 type: integer
-            required: *id008
         exposure:
           type: array
           items:
@@ -824,9 +837,7 @@ components:
                 type: number
               unassessedClaims:
                 type: integer
-            required: *id008
         lastUpdated:
           type: string
           format: date-time
           nullable: true
-      required: *id008

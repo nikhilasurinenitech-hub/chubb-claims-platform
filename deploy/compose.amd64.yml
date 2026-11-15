@@ -1,0 +1,8 @@
+# Optional overlay for checking AMD64 application images on an emulating ARM host.
+services:
+  claims-service:
+    platform: linux/amd64
+  insights-service:
+    platform: linux/amd64
+  web:
+    platform: linux/amd64

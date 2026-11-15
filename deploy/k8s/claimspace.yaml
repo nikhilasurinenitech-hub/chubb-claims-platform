@@ -1,0 +1,475 @@
+# Local-cluster demonstration only. See README before applying.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: claimspace
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demo-credentials
+  namespace: claimspace
+type: Opaque
+stringData:
+  demo-password: ClaimsDemo!2026
+  postgres-admin-password: local-admin-only
+  claims-db-password: local-claims-only
+  insights-db-password: local-insights-only
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: claimspace
+data:
+  01-create-services.sql: '-- Demo-only credentials. Production requires managed secrets.
+
+    CREATE ROLE claims_app LOGIN PASSWORD ''local-claims-only'';
+
+    CREATE ROLE insights_app LOGIN PASSWORD ''local-insights-only'';
+
+    CREATE SCHEMA claims AUTHORIZATION claims_app;
+
+    CREATE SCHEMA insights AUTHORIZATION insights_app;
+
+    REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+
+    '
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: claimspace
+spec:
+  selector:
+    app: postgres
+  ports:
+  - name: postgres
+    port: 5432
+    targetPort: 5432
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: claimspace
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: postgres
+        image: docker.io/library/postgres:17-alpine
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: claims_platform
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: demo-credentials
+              key: postgres-admin-password
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/data
+        - name: init
+          mountPath: /docker-entrypoint-initdb.d
+          readOnly: true
+        readinessProbe:
+          exec:
+            command: &id001
+            - pg_isready
+            - -U
+            - postgres
+            - -d
+            - claims_platform
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command: *id001
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: '2'
+            memory: 1536Mi
+      volumes:
+      - name: init
+        configMap:
+          name: postgres-init
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: claimspace
+spec:
+  selector:
+    app: kafka
+  ports:
+  - name: client
+    port: 29092
+    targetPort: 29092
+  - name: controller
+    port: 29093
+    targetPort: 29093
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: claimspace
+spec:
+  serviceName: kafka
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: kafka
+        image: docker.io/apache/kafka:4.1.0
+        ports:
+        - containerPort: 29092
+        env:
+        - name: KAFKA_NODE_ID
+          value: '1'
+        - name: KAFKA_PROCESS_ROLES
+          value: broker,controller
+        - name: KAFKA_LISTENERS
+          value: INTERNAL://:29092,CONTROLLER://:29093
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: INTERNAL://kafka:29092
+        - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+          value: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+        - name: KAFKA_INTER_BROKER_LISTENER_NAME
+          value: INTERNAL
+        - name: KAFKA_CONTROLLER_LISTENER_NAMES
+          value: CONTROLLER
+        - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+          value: 1@kafka:29093
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          value: '1'
+        - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+          value: '1'
+        - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+          value: '1'
+        - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+          value: '0'
+        - name: KAFKA_LOG_DIRS
+          value: /tmp/kraft-combined-logs
+        - name: KAFKA_HEAP_OPTS
+          value: -Xms256m -Xmx512m
+        - name: CLUSTER_ID
+          value: MkU3OEVBNTcwNTJENDM2Qk
+        volumeMounts:
+        - name: data
+          mountPath: /tmp/kraft-combined-logs
+        readinessProbe:
+          exec:
+            command: &id001
+            - /opt/kafka/bin/kafka-broker-api-versions.sh
+            - --bootstrap-server
+            - localhost:29092
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command: *id001
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: '2'
+            memory: 1536Mi
+      volumes: []
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claims-service
+  namespace: claimspace
+spec:
+  selector:
+    app: claims-service
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 8081
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claims-service
+  namespace: claimspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claims-service
+  template:
+    metadata:
+      labels:
+        app: claims-service
+    spec:
+      containers:
+      - name: claims-service
+        image: localhost/claimspace/claims:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081
+        env:
+        - name: DB_URL
+          value: jdbc:postgresql://postgres:5432/claims_platform?currentSchema=claims
+        - name: DB_USER
+          value: claims_app
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: demo-credentials
+              key: claims-db-password
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: kafka:29092
+        - name: DEMO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: demo-credentials
+              key: demo-password
+        - name: DEMO_SEED
+          value: 'true'
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8081
+          initialDelaySeconds: 45
+          periodSeconds: 15
+        resources:
+          requests:
+            cpu: 200m
+            memory: 384Mi
+          limits:
+            cpu: '1'
+            memory: 768Mi
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: insights-service
+  namespace: claimspace
+spec:
+  selector:
+    app: insights-service
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 8082
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insights-service
+  namespace: claimspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: insights-service
+  template:
+    metadata:
+      labels:
+        app: insights-service
+    spec:
+      containers:
+      - name: insights-service
+        image: localhost/claimspace/insights:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8082
+        env:
+        - name: DB_URL
+          value: jdbc:postgresql://postgres:5432/claims_platform?currentSchema=insights
+        - name: DB_USER
+          value: insights_app
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: demo-credentials
+              key: insights-db-password
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: kafka:29092
+        - name: DEMO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: demo-credentials
+              key: demo-password
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8082
+          initialDelaySeconds: 45
+          periodSeconds: 15
+        resources:
+          requests:
+            cpu: 200m
+            memory: 384Mi
+          limits:
+            cpu: '1'
+            memory: 768Mi
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: claimspace
+spec:
+  selector:
+    app: web
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: claimspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: localhost/claimspace/web:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: CLAIMS_UPSTREAM
+          value: claims-service.claimspace.svc.cluster.local:8081
+        - name: INSIGHTS_UPSTREAM
+          value: insights-service.claimspace.svc.cluster.local:8082
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 101
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        readinessProbe:
+          httpGet:
+            path: /health/claims
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health/web
+            port: 8080
+          initialDelaySeconds: 45
+          periodSeconds: 15
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+          limits:
+            cpu: '1'
+            memory: 192Mi
+      volumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 128Mi
