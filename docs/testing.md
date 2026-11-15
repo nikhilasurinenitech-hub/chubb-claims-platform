@@ -41,7 +41,7 @@ JaCoCo reports are generated under each backend service's target/site/jacoco dir
 | Claims service module | 312 | 391 | 79.8% |
 | Insights service module | 79 | 86 | 91.9% |
 
-These are JUnit instrumentation results, not combined system-test coverage. Demo seeding and live outbox publication are exercised in container checks and are not included in those percentages. Coverage is evidence of exercised code; it does not establish that every failure mode is handled.
+These are JUnit instrumentation results, not combined system-test coverage. Demo seeding is included through the later-day restart regression. Live outbox publication is exercised in container checks and is not included in those percentages. Coverage is evidence of exercised code; it does not establish that every failure mode is handled.
 
 ## Runtime checks
 

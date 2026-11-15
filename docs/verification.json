@@ -1,5 +1,5 @@
 {
-  "verifiedAtUtc": "2026-11-15T19:18:48.271416+00:00",
+  "verifiedAtUtc": "2026-11-15T19:38:29.902925+00:00",
   "applicationStack": {
     "backend": "Java 21 / Spring Boot 3.5.16",
     "frontend": "Angular 22.2.6, CLI 22.2.7, Native Federation 22.2.5",
@@ -8,7 +8,7 @@
   },
   "backend": {
     "status": "PASS",
-    "tests": 17,
+    "tests": 18,
     "suites": [
       {
         "suite": "com.example.claims.domain.ClaimTest",
@@ -20,6 +20,13 @@
       {
         "suite": "com.example.claims.ClaimsApiIT",
         "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "com.example.claims.DemoRestartIT",
+        "tests": 1,
         "failures": 0,
         "errors": 0,
         "skipped": 0
@@ -117,7 +124,7 @@
           "name": "claims",
           "tag": "localhost/claimspace/claims:1.0.0-arm64",
           "architecture": "arm64",
-          "imageId": "9c2729c92be6b45d57a1366cff1840d21759b68acb8e3f851ab49f32e5871acb"
+          "imageId": "29ed6fea852624fcce46fac10d6e27ce5fb43f488ec0cfc570675c1a326c05e3"
         },
         {
           "name": "insights",
@@ -132,7 +139,7 @@
           "imageId": "6b2a9f28f097877e4920873093d658a27488237f0636354982752bcf526ce982"
         }
       ],
-      "sha256": "b3806e0d775d0b0204f5d2f6d36e9e3c610911b0c35ddf428d375fc2f960a0da"
+      "sha256": "ea4c997817368150d6f4add2aa911ed7ca8b633da3c5c7f7d452b4a84107a6e4"
     },
     "amd64": {
       "format": "docker-archive+gzip",
@@ -143,22 +150,22 @@
           "name": "claims",
           "tag": "localhost/claimspace/claims:1.0.0-amd64",
           "architecture": "amd64",
-          "imageId": "bc48fcfb4588e6a678ac60147ae4f7dc6c110025884d1f1465b1346c14c1b438"
+          "imageId": "93cdf509a15ebc9d0004e400a042c047d313568dd859f79c08587ece85f5c714"
         },
         {
           "name": "insights",
           "tag": "localhost/claimspace/insights:1.0.0-amd64",
           "architecture": "amd64",
-          "imageId": "3331b6395cc66a8424b1afdb354244aeb0961576972b90257e87e1eff31bbe25"
+          "imageId": "084a449d955dc8fa4cbf4f7f1c8e666fdce0a154f39d53053b5f9b7f077f213a"
         },
         {
           "name": "web",
           "tag": "localhost/claimspace/web:1.0.0-amd64",
           "architecture": "amd64",
-          "imageId": "2133b6dca22548ba01e271ced2c5dfa54bb7a79f30ae20fcc32273b412c42404"
+          "imageId": "db32f951f4d86d63902178e4c7a310f0681d87d86f7e842a4418b21515e2985e"
         }
       ],
-      "sha256": "d9911a41929dfe5e7aa926c8720161afba5ddef98f58ab8d05e2b07c7c4f19ef"
+      "sha256": "d181dcb4c0e147a92a5a54350b595ee260b2c386a04ed7ddcdfaa1746c8eae76"
     }
   }
 }

@@ -7,7 +7,7 @@
       "name": "claims",
       "tag": "localhost/claimspace/claims:1.0.0-arm64",
       "architecture": "arm64",
-      "imageId": "9c2729c92be6b45d57a1366cff1840d21759b68acb8e3f851ab49f32e5871acb"
+      "imageId": "29ed6fea852624fcce46fac10d6e27ce5fb43f488ec0cfc570675c1a326c05e3"
     },
     {
       "name": "insights",
@@ -22,5 +22,5 @@
       "imageId": "6b2a9f28f097877e4920873093d658a27488237f0636354982752bcf526ce982"
     }
   ],
-  "sha256": "b3806e0d775d0b0204f5d2f6d36e9e3c610911b0c35ddf428d375fc2f960a0da"
+  "sha256": "ea4c997817368150d6f4add2aa911ed7ca8b633da3c5c7f7d452b4a84107a6e4"
 }

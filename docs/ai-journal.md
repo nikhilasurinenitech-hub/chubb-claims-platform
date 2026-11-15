@@ -57,3 +57,6 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Added a PostgreSQL integration regression with a mutable clock. It reproduced the failure after advancing from 15 to 16 November: the replay raised an idempotency conflict.
 - Replaced current-day fixture dates with fixed assessment dates and removed the seeder's clock dependency. This preserves the existing fixture payloads and keeps subsequent restarts deterministic.
 - The complete backend suite now passes 18 tests, including the new later-day regression. The affected application image and both delivery archives are being refreshed.
+
+- After the later-day fix, all three browser scenarios passed again on native ARM64 and on the refreshed AMD64 images under QEMU. Both refreshed image archives passed load checks.
+- Restored the clean eight-claim demo from the Downloads repository after auditing and backing up only the four new automated-test records. The final verification record contains 18 backend tests, 10 component tests and 3 browser scenarios.

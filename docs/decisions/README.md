@@ -45,3 +45,7 @@ Keep immutable reference data in process and avoid a distributed cache for this 
 ## ADR 011 Runtime DNS resolution
 
 A persistence/replay test exposed stale Nginx upstream addresses after Podman changed a restarted backend’s IP. The initial static configuration was replaced with runtime DNS resolution using the container’s configured resolver and a five-second cache. An explicit template substitution preserves Nginx variables, and generated configuration lives in /tmp. The restart and replay check then passed without a web restart.
+
+## ADR 012 Deterministic demo fixture payloads
+
+A final review found that fixed seed idempotency keys were paired with dates calculated from the current day. A PostgreSQL regression advancing the application clock reproduced a later-day conflict. Fixture incident dates now use a fixed assessment anchor, while live claim validation and audit timestamps still use the clock. The same key therefore represents the same fixture payload on every restart. Intentional fixture changes require a new fixture-key version.
