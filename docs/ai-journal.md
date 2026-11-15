@@ -14,3 +14,12 @@ This is a chronological record of actual collaboration. The AI generated code an
 - AI installed Podman/Compose as authorised. Initial macOS video decoding failed in the sandbox; the read-only extraction succeeded with access to macOS media services.
 - AI checked official Spring Boot, Angular, Native Federation and Podman documentation. The installed Node 23 is outside Angular's supported ranges; the bundled Node 24 is compatible and will be used for builds.
 - No human overrides or code-review outcomes have occurred yet. Do not invent them for rubric credit.
+
+## Backend implementation and verification
+
+- Added ten domain tests first and confirmed compilation failed before the domain existed. Implemented the state machine and all ten passed.
+- Added real PostgreSQL integration tests for API ownership, staff permissions, idempotency, stale writes, information cycle, settlement, rejection, outbox atomicity and versioned insights.
+- Integration tests exposed a missing Spring Security password encoder registration. AI initially suspected the HTTP test client's challenge behaviour; logs showed the password encoding prefix was the actual cause. Registered the delegating encoder explicitly and kept preemptive-header tests matching the frontend.
+- Recreated the newly created empty Podman VM after its interrupted first boot left a Linux account lock. A persistent terminal allowed clean initialisation; the VM responds on ARM64.
+- Full backend `mvn verify` passed: ten unit tests and six PostgreSQL integration tests. Kafka transport remains to be exercised in the full-system test.
+- Angular registry checks found CLI 22.2.7 and framework 22.2.6. Corrected the initial assumption that patch numbers matched. Federation adapter is 22.2.5. Dependency installation reported zero vulnerabilities at that point.

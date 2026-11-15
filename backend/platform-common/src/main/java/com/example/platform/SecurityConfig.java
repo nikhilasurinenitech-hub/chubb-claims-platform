@@ -9,14 +9,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 @Configuration @EnableMethodSecurity
 public class SecurityConfig {
  @Bean Clock clock() { return Clock.systemUTC(); }
- @Bean UserDetailsService users(@Value("${demo.password:ClaimsDemo!2026}") String password) {
-  var encoder = new BCryptPasswordEncoder();
+ @Bean PasswordEncoder passwordEncoder() { return PasswordEncoderFactories.createDelegatingPasswordEncoder(); }
+ @Bean UserDetailsService users(@Value("${demo.password:ClaimsDemo!2026}") String password, PasswordEncoder encoder) {
   return new InMemoryUserDetailsManager(
    User.withUsername("maya").password(encoder.encode(password)).roles("CLAIMANT").build(),
    User.withUsername("leo").password(encoder.encode(password)).roles("CLAIMANT").build(),
