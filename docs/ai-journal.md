@@ -50,3 +50,10 @@ This is a chronological record of actual collaboration. The AI generated code an
 - The user has not yet completed a line-by-line review. These checks and corrections are AI work, not invented candidate overrides.
 
 - Removed unused IDE launch scaffolding and an empty stylesheet so the supported entry points remain the documented Compose run, build and test commands.
+
+## Final restart review and date regression
+
+- AI spotted a date-dependent fixture problem during final handoff review: seed keys were fixed but incident dates used the current day. A later-day restart could reuse a key with a changed payload.
+- Added a PostgreSQL integration regression with a mutable clock. It reproduced the failure after advancing from 15 to 16 November: the replay raised an idempotency conflict.
+- Replaced current-day fixture dates with fixed assessment dates and removed the seeder's clock dependency. This preserves the existing fixture payloads and keeps subsequent restarts deterministic.
+- The complete backend suite now passes 18 tests, including the new later-day regression. The affected application image and both delivery archives are being refreshed.

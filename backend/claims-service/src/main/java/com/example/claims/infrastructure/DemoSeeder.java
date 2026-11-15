@@ -13,11 +13,9 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "demo.seed", havingValue = "true")
 public class DemoSeeder {
   private final ClaimService service;
-  private final Clock clock;
 
-  public DemoSeeder(ClaimService service, Clock clock) {
+  public DemoSeeder(ClaimService service) {
     this.service = service;
-    this.clock = clock;
   }
 
   @EventListener(ApplicationReadyEvent.class)
@@ -106,12 +104,13 @@ public class DemoSeeder {
       String description,
       int amount,
       String target) {
+    // Versioned fixtures must keep the same payload when replayed on later days.
     var result =
         service.create(
             new CreateClaim(
                 type,
                 market,
-                LocalDate.now(clock).minusDays(i + 2),
+                LocalDate.of(2026, 11, 15).minusDays(i + 2),
                 location,
                 description,
                 BigDecimal.valueOf(amount)),

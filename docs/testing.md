@@ -7,7 +7,7 @@ Checks are selected for behaviour and boundaries rather than test-count targets.
 | Layer | Cases | What they establish |
 | --- | --- | --- |
 | Java domain | 10 | State transitions, officer/claimant ownership, money precision, settlement limits and terminal behaviour |
-| Claims PostgreSQL integration | 4 | HTTP authentication/roles, claimant isolation, submission replay/conflict, stale commands, full workflow, atomic history/outbox and invalid request responses |
+| Claims PostgreSQL integration | 5 | HTTP authentication/roles, claimant isolation, submission replay/conflict, stale commands, full workflow, atomic history/outbox, invalid request responses and replaying demo fixtures after a clock advance |
 | Insights PostgreSQL integration | 3 | Duplicate/older snapshot rejection, currency separation, settled exposure removal and unsupported schema rejection |
 | Angular components/auth | 10 | Readable status/currency, accessible feedback, in-memory identity, credential boundaries, permission-aware actions and draft preservation |
 | Playwright browser | 3 | Claimant/officer settlement journey, rejection, claimant isolation and mobile validation/layout |
@@ -38,7 +38,7 @@ JaCoCo reports are generated under each backend service's target/site/jacoco dir
 | Scope | Covered lines | Total lines | Line coverage |
 | --- | --- | --- | --- |
 | Claim domain aggregate | 42 | 48 | 87.5% |
-| Claims service module | 265 | 392 | 67.6% |
+| Claims service module | 312 | 391 | 79.8% |
 | Insights service module | 79 | 86 | 91.9% |
 
 These are JUnit instrumentation results, not combined system-test coverage. Demo seeding and live outbox publication are exercised in container checks and are not included in those percentages. Coverage is evidence of exercised code; it does not establish that every failure mode is handled.

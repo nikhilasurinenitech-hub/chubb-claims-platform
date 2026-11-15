@@ -7,7 +7,7 @@ This maps the supplied scoring areas to inspectable evidence. It is not a predic
 | Planning, architecture and design thinking | 15 | Approved design and implementation plan committed first; architecture diagrams and decision records |
 | Service and API design | 10 | OpenAPI, versioned event schema, validated commands and Problem Details errors |
 | Clean architecture and discipline | 15 | Pure claim state machine, application contracts/port, JDBC adapter, transactions and separated reporting |
-| Backend test automation | 8 | 17 Java tests against domain rules and real PostgreSQL; live Kafka outage/replay checks |
+| Backend test automation | 8 | 18 Java tests against domain rules and real PostgreSQL; live Kafka outage/replay checks |
 | Data and integration | 12 | Flyway, isolated SQL schemas/roles, decimal money, outbox and versioned projection |
 | Backend functional completeness | 5 | Submission through information cycle to settlement/rejection, audit history and reporting |
 | MFE architecture and components | 15 | Shell, claimant and staff builds; runtime federation; shared presentation and API library |

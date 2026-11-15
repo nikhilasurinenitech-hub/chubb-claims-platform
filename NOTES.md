@@ -2,6 +2,7 @@
 
 The brief deliberately leaves service boundaries, data models and priorities open. The user approved the proposed two-service design and delegated remaining decisions.
 
+- Demo fixture payloads use fixed assessment dates and versioned keys. Replaying them on a later day must not change the submission fingerprint. Change the fixture-key version when intentionally changing fixture content.
 - One incident belongs to one claim. Motor and property share a workflow; incident details are owned by the claim.
 - Two roles cover the brief. Officers can see team reporting; a separate manager role adds no essential demonstration flow.
 - A claimant owns a claim through authenticated identity. The create API does not accept an owner ID from the browser.
