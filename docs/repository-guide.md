@@ -17,10 +17,10 @@ The repository follows the supplied video's recommended responsibilities while r
 | `openapi/` | [API contract](../openapi/claims.yaml) and event schema in root `openapi/` | Frontend/backend and event boundaries |
 | `docker-compose.yml` | [Root Compose](../docker-compose.yml), backend/frontend Dockerfiles, `release/` | Source builds and supplied-image startup |
 | `NOTES.md` | [Assumptions](../NOTES.md), [design decisions](decisions/README.md) | Scope, rationale and trade-offs |
-| `prompts/` | [Developer prompt guide](../prompts/README.md) and twelve numbered prompts | Planning, implementation, challenge and verification instructions |
+| `prompts/` | [Developer prompts](../prompts/README.md) and twelve numbered prompts | Planning, implementation, challenge and verification instructions |
 | AI journal | [AI working journal](ai-journal.md) | Real iterations, corrections and check outcomes |
 
-The prompts and journal are separate: prompts guide the work; the journal records what happened. The developer prompt set was prepared after the initial implementation and is labelled accordingly in its guide.
+The prompts and journal are separate: prompts guide the work; the journal records what happened. The AI journal records when the developer prompt set was prepared and revised.
 
 ## Frontend structure
 

@@ -167,7 +167,7 @@ This follows the video's layered structure while retaining standard Maven source
 - [Walkthrough and interview preparation](docs/walkthrough.md)
 - [Assessment evidence map](docs/rubric-mapping.md)
 - [Repository structure and video mapping](docs/repository-guide.md)
-- [Developer prompt guide](prompts/README.md)
+- [Developer prompts](prompts/README.md)
 - [AI working journal](docs/ai-journal.md)
 - [API contract](openapi/claims.yaml)
 - [Image delivery](docs/image-delivery.md)

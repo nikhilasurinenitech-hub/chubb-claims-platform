@@ -1,29 +1,15 @@
-# Angular micro-frontends and state
-
-Use this to organise one Angular application for two personas without duplicating the domain rules.
-
-## Developer prompt
+# Angular frontend and state
 
 ```text
-Build or review the Claimspace frontend in one Angular workspace with a shell, claimant remote, staff remote and shared library. Use the already approved Native Federation setup and pinned dependencies. Explain why these are separately built/runtime-loaded features and how the local Nginx deployment hosts them together.
+Build the Angular frontend for both user types in one workspace. Give the claimant and staff flows clear boundaries, with shared components where that makes sense.
 
-The shell owns login, navigation, role-aware routes and remote-load failure handling. Claimant owns reporting an incident, listing personal claims, detail/history and responses. Staff owns the workqueue, pickup, assessment, information requests, approval, settlement, rejection and reporting.
+The assessment mentions micro-frontends, so propose a sensible shell and feature structure without making the local setup difficult. Keep API calls and state handling easy to follow.
 
-Put typed API contracts and HTTP access behind the shared boundary. Share identity and Angular injection dependencies consistently across remotes. Keep business enforcement on the backend; UI permission checks improve navigation and action availability.
-
-Use signals for small feature-local state and RxJS for HTTP/polling. Make selected detail, loading, errors, pending commands and draft inputs explicit. Stop polling on destroy, pause it when hidden and make eventual reporting freshness visible. Preserve drafts during failed or pending actions and tell users to refresh after 409 conflicts.
-
-Avoid adding a state-management library without a concrete need. Explain when a lazy modular frontend would be simpler than federation and what independent remote deployment would additionally require.
+Let's get the main workflow working first, including loading states, errors and refreshing data after an action.
 ```
 
-## Challenge prompt
+## Follow-up prompts
 
 ```text
-Follow a staff assessment from the component through ClaimsApi to the returned detail. Where does its observed version come from? What happens on a failed request, a remote-load failure and a route change while polling? Does refreshing a list also refresh its selected detail? Verify the actual code rather than assuming it does.
+Is the shared code doing too much? Keep business decisions on the backend, and check that moving between pages does not leave polling or stale state behind.
 ```
-
-## Artifacts to review
-
-- [Angular workspace](../frontend/angular.json) and [shell federation manifest](../frontend/projects/shell/public/federation.manifest.json).
-- [Shared API](../frontend/projects/shared/src/lib/api.ts), [claimant page](../frontend/projects/claimant/src/app/claimant-page.ts) and [staff page](../frontend/projects/staff/src/app/staff-page.ts).
-- [Frontend design](../docs/architecture.md).

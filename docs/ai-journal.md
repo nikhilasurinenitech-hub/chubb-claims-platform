@@ -71,3 +71,11 @@ This is a chronological record of actual collaboration. The AI generated code an
 - This update changes documentation only. Existing test results remain the previously recorded execution results; application images and saved user claims do not require changes.
 - Documentation checks passed for all twelve numbered prompts, 120 local Markdown links, balanced code fences and a documentation-only diff. Application test suites were not rerun for this documentation update.
 - Generated a self-contained HTML prompt guide for reading alongside the source ZIP. A headless browser checked twelve sections, 25 copyable developer/challenge blocks, internal navigation and desktop/mobile widths; screenshots were visually inspected.
+
+## 16 November 2026 — Direct developer prompt list
+
+- Revised the prompt set to read as natural developer requests, with less implementation prescription and shorter follow-up questions.
+- Removed the per-file usage introductions and the instructional guide text. Added prompts/ALL-PROMPTS.md containing the complete numbered set, alongside the twelve individual files and their index.
+- Kept supplied-material references in the prompt index and moved the review-log template into docs so the prompts folder contains the prompts and their index.
+- This remains a documentation-only update; the dated journal continues to distinguish actual implementation and verification from the prepared prompt set.
+- Verified that the combined list exactly matches the twelve individual files and their thirteen follow-up prompts. All 53 local links in the changed Markdown passed; the updated HTML list passed desktop/mobile navigation and overflow checks.

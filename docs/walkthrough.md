@@ -97,5 +97,5 @@ Prioritise real identity/TLS, policy validation and safe document handling; then
 - Explain why Kafka can lag while a claimant sees the committed result.
 - Locate the SQL schemas, migration, API and event contracts.
 - Read the AI-generated code and record any corrections in the journal.
-- Read the [developer prompt guide](../prompts/README.md), try its challenge questions and use the [review log template](../prompts/review-log-template.md) for completed reviews.
+- Read the [developer prompt guide](../prompts/README.md), try its challenge questions and use the [review log template](review-log-template.md) for completed reviews.
 - Be clear about what was actually executed locally and what remains a CI/Kubernetes reference.
