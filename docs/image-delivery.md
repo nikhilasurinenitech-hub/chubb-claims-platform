@@ -17,17 +17,37 @@ Choose the image archive matching the examiner's machine:
 
 The supplied archives use Docker's archive format with gzip compression. They contain the three application images; Compose pulls the standard PostgreSQL and Kafka images from their public registries on first use. Internet access is required for those first pulls.
 
+Extract the source ZIP beside the selected image archive. Start Docker Desktop (or Podman), then open a terminal inside the extracted `chubb-claims-platform` folder. In the examples below, `../` refers to the folder containing the archive.
+
+## One-line start
+
+For Intel/AMD, in Bash, zsh or PowerShell 7:
+
+~~~bash
+docker load -i ../claimspace-images-linux-amd64.tar.gz && docker compose --env-file release/amd64.env up --no-build -d
+~~~
+
+For Apple Silicon/ARM64:
+
+~~~bash
+docker load -i ../claimspace-images-linux-arm64.tar.gz && docker compose --env-file release/arm64.env up --no-build -d
+~~~
+
+The line performs two operations: import the prebuilt images, then start Compose if the import succeeds. The same instructions are available at the project root in [RUN-INSTRUCTIONS.txt](../RUN-INSTRUCTIONS.txt).
+
+## Separate commands
+
 For ARM64:
 
 ~~~bash
-docker load -i claimspace-images-linux-arm64.tar.gz
+docker load -i ../claimspace-images-linux-arm64.tar.gz
 docker compose --env-file release/arm64.env up --no-build -d
 ~~~
 
 For Intel/AMD:
 
 ~~~bash
-docker load -i claimspace-images-linux-amd64.tar.gz
+docker load -i ../claimspace-images-linux-amd64.tar.gz
 docker compose --env-file release/amd64.env up --no-build -d
 ~~~
 

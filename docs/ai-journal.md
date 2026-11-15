@@ -82,3 +82,10 @@ This is a chronological record of actual collaboration. The AI generated code an
 
 - Refined the prompt wording again into shorter, conversational developer requests with varied sentence structure and practical follow-up questions. The numbered files and combined list retain the same twelve topics.
 - Reordered the first prompt to introduce the claims application, its two user types and the intended stack before requesting a review of the brief, slides and repository video and a proposed plan.
+
+## 16 November 2026 — Image startup instructions
+
+- Added the exact combined image-load/Compose line to the root README, image delivery document and a tracked RUN-INSTRUCTIONS.txt. The earlier handoff listed these as separate commands.
+- Standardised the archive location: extract the source ZIP beside the chosen archive and run from the extracted project folder, using ../ for the archive path.
+- Explained image importing, Compose, background startup, runtime prerequisites, first-use downloads and later restarts. Kept separate-command instructions for terminals without && support.
+- Updated packaging to refresh the source ZIP and run instructions in the existing ignored submission folder, so the copies shared from Downloads stay in sync with the delivery outputs.

@@ -1,0 +1,54 @@
+CLAIMSPACE — START FROM THE SUPPLIED DOCKER IMAGES
+
+WHAT TO SEND
+Send claimspace-project.zip and ONE image archive:
+- Intel/AMD Windows, Linux or Intel Mac: claimspace-images-linux-amd64.tar.gz
+- Apple Silicon Mac or ARM64 Linux: claimspace-images-linux-arm64.tar.gz
+Matching .sha256 files are provided for integrity checks.
+
+BEFORE RUNNING
+Start Docker Desktop, or a Podman machine with Compose installed.
+Extract claimspace-project.zip beside the selected image archive:
+
+submission-folder/
+  claimspace-images-linux-amd64.tar.gz   (or the arm64 archive)
+  chubb-claims-platform/
+    docker-compose.yml
+    release/
+    RUN-INSTRUCTIONS.txt
+
+Open a terminal inside that extracted chubb-claims-platform folder.
+
+ONE-LINE START — INTEL/AMD
+docker load -i ../claimspace-images-linux-amd64.tar.gz && docker compose --env-file release/amd64.env up --no-build -d
+
+ONE-LINE START — APPLE SILICON/ARM64
+docker load -i ../claimspace-images-linux-arm64.tar.gz && docker compose --env-file release/arm64.env up --no-build -d
+
+These lines work in Bash, zsh and PowerShell 7. In a terminal without && support,
+run the part before && first, then run the part after it if loading succeeded.
+For Podman, replace both occurrences of docker with podman.
+
+WHAT THE LINE DOES
+docker load imports the three prebuilt application images.
+&& starts the next operation only if importing succeeds.
+docker compose starts the frontend, two Spring Boot services, PostgreSQL and Kafka.
+--no-build uses the prepared images; -d runs the containers in the background.
+PostgreSQL and Kafka download on first use, so that first start needs internet.
+Java, Maven and Node do not need to be installed on the host.
+
+CHECK AND OPEN
+docker compose ps
+Wait until all five services are healthy, then open http://localhost:8080
+Sign in as maya for the claimant view or alex for the officer view.
+Password for both: ClaimsDemo!2026
+
+LATER RESTARTS — NO IMAGE IMPORT NEEDED
+Intel/AMD: docker compose --env-file release/amd64.env up --no-build -d
+ARM64: docker compose --env-file release/arm64.env up --no-build -d
+
+STOP WHILE KEEPING SAVED CLAIMS
+docker compose down
+
+VIEW LOGS
+docker compose logs --tail=100

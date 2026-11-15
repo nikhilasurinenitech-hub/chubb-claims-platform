@@ -6,7 +6,7 @@ The repository follows the supplied video's recommended responsibilities while r
 
 | Video item | Location in this project | What to inspect |
 | --- | --- | --- |
-| `README.md` | [Root README](../README.md) | Purpose, startup, accounts, demo, tests and navigation |
+| `README.md` | [Root README](../README.md) and [run instructions](../RUN-INSTRUCTIONS.txt) | Purpose, one-line image startup, accounts, demo, tests and navigation |
 | `src/api/` | [Claims API](../backend/claims-service/src/main/java/com/example/claims/api/ClaimController.java) and [insights API](../backend/insights-service/src/main/java/com/example/insights/api/InsightsController.java) | HTTP transport and delegation |
 | `src/domain/` | [Claim domain](../backend/claims-service/src/main/java/com/example/claims/domain/Claim.java) | Lifecycle and business invariants without Spring/SQL dependencies |
 | `src/service/` | [ClaimService](../backend/claims-service/src/main/java/com/example/claims/service/ClaimService.java), [ClaimStore port](../backend/claims-service/src/main/java/com/example/claims/service/ClaimStore.java), insights services | Use cases, transactions and owned contracts |

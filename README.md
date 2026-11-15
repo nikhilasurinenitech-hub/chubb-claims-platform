@@ -36,6 +36,28 @@ podman machine start chubb-takehome
 
 On another Mac, initialise and start your own Podman machine if needed. The scripts/start.sh helper detects an available runtime and waits for the application.
 
+## Start from the supplied images
+
+The examiner can run the compiled application without building the source. Send `claimspace-project.zip` plus the image archive matching their machine. Extract the ZIP beside the archive, then open a terminal in the extracted `chubb-claims-platform` folder. Start Docker Desktop first.
+
+Intel/AMD — one-line start (Bash, zsh or PowerShell 7):
+
+~~~bash
+docker load -i ../claimspace-images-linux-amd64.tar.gz && docker compose --env-file release/amd64.env up --no-build -d
+~~~
+
+Apple Silicon/ARM64:
+
+~~~bash
+docker load -i ../claimspace-images-linux-arm64.tar.gz && docker compose --env-file release/arm64.env up --no-build -d
+~~~
+
+`docker load` imports the prepared application images. `&&` runs the next part only after loading succeeds. `docker compose ... up --no-build -d` starts all five containers in the background using those images. PostgreSQL and Kafka download on first use, so that first start needs internet access. Docker/Podman must be running; host Java and Node are not required.
+
+Check `docker compose ps` and wait for all services to be healthy, then open http://localhost:8080. Podman users can replace `docker` with `podman`. For terminals without `&&` support, run the load and Compose parts as two separate commands.
+
+The same commands are in [RUN-INSTRUCTIONS.txt](RUN-INSTRUCTIONS.txt) and [image delivery](docs/image-delivery.md). On the development Mac, the files to send are collected in the ignored `artifacts/submission/` folder inside the Downloads project.
+
 ## Demo accounts
 
 All four accounts use the password **ClaimsDemo!2026**.
