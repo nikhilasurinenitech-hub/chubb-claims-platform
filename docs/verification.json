@@ -1,0 +1,164 @@
+{
+  "verifiedAtUtc": "2026-11-15T19:18:48.271416+00:00",
+  "applicationStack": {
+    "backend": "Java 21 / Spring Boot 3.5.16",
+    "frontend": "Angular 22.2.6, CLI 22.2.7, Native Federation 22.2.5",
+    "database": "PostgreSQL 17",
+    "events": "Apache Kafka 4.1.0"
+  },
+  "backend": {
+    "status": "PASS",
+    "tests": 17,
+    "suites": [
+      {
+        "suite": "com.example.claims.domain.ClaimTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "com.example.claims.ClaimsApiIT",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "com.example.insights.ProjectionIT",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "frontendComponents": {
+    "status": "PASS",
+    "tests": 10
+  },
+  "browserScenarios": {
+    "status": "PASS",
+    "scenarios": 3,
+    "nativeArm64": true,
+    "amd64UnderQemu": true
+  },
+  "platformNote": "AMD64 application images were executed through QEMU inside an ARM64 Podman VM. PostgreSQL and Kafka remained native ARM64 during that check. No native Intel/AMD host test is claimed.",
+  "runtimeChecks": {
+    "apiAndKafkaSmoke": {
+      "result": "PASS",
+      "reference": "CLM-C5474DA9E48F",
+      "finalStatus": "SETTLED",
+      "historyEntries": 7,
+      "pendingEvents": 0,
+      "currencies": [
+        "AUD",
+        "HKD",
+        "JPY",
+        "MYR",
+        "NZD",
+        "SGD"
+      ]
+    },
+    "brokerOutageRecovery": {
+      "result": "PASS",
+      "claimId": "cca62fdf-f7d5-4317-b4a6-817c0a3dc801",
+      "committedWhileKafkaStopped": true,
+      "projectionAfterRecovery": "SUBMITTED:0"
+    },
+    "containerPersistenceAndKafkaReplay": {
+      "result": "PASS",
+      "claimsBeforeAndAfter": "12:c2b966f1029f81b286576aabc5beb0d1",
+      "projectionBeforeAndAfter": "12:c2b966f1029f81b286576aabc5beb0d1",
+      "compactedTopic": true,
+      "replayLagZero": true
+    },
+    "freshDemo": {
+      "result": "PASS",
+      "fixtureCount": 8,
+      "projectionCount": 8,
+      "pendingEvents": 0,
+      "unknownRecordsDiscarded": 0,
+      "backupCreated": true
+    }
+  },
+  "openapi": {
+    "version": "3.0.3",
+    "validator": "openapi-spec-validator 0.9.0",
+    "result": "PASS"
+  },
+  "eventContract": {
+    "draft": "2020-12",
+    "actualEmittedSnapshotValidated": true
+  },
+  "databaseBoundary": {
+    "crossSchemaUsageDeniedInBothDirections": true
+  },
+  "kubernetes": {
+    "validator": "kubeconform 0.8.0",
+    "strict": true,
+    "resources": 13,
+    "valid": 13,
+    "invalid": 0,
+    "deployedToLiveCluster": false
+  },
+  "remoteCiExecuted": false,
+  "publication": {
+    "githubRepositoryPublished": false,
+    "imageRegistryPushed": false
+  },
+  "images": {
+    "arm64": {
+      "format": "docker-archive+gzip",
+      "applicationVersion": "1.0.0",
+      "architecture": "arm64",
+      "images": [
+        {
+          "name": "claims",
+          "tag": "localhost/claimspace/claims:1.0.0-arm64",
+          "architecture": "arm64",
+          "imageId": "9c2729c92be6b45d57a1366cff1840d21759b68acb8e3f851ab49f32e5871acb"
+        },
+        {
+          "name": "insights",
+          "tag": "localhost/claimspace/insights:1.0.0-arm64",
+          "architecture": "arm64",
+          "imageId": "456d8dcee05243b8fb31faa212732900501ec700c9c28088544ec903ffdfd5b0"
+        },
+        {
+          "name": "web",
+          "tag": "localhost/claimspace/web:1.0.0-arm64",
+          "architecture": "arm64",
+          "imageId": "6b2a9f28f097877e4920873093d658a27488237f0636354982752bcf526ce982"
+        }
+      ],
+      "sha256": "b3806e0d775d0b0204f5d2f6d36e9e3c610911b0c35ddf428d375fc2f960a0da"
+    },
+    "amd64": {
+      "format": "docker-archive+gzip",
+      "applicationVersion": "1.0.0",
+      "architecture": "amd64",
+      "images": [
+        {
+          "name": "claims",
+          "tag": "localhost/claimspace/claims:1.0.0-amd64",
+          "architecture": "amd64",
+          "imageId": "bc48fcfb4588e6a678ac60147ae4f7dc6c110025884d1f1465b1346c14c1b438"
+        },
+        {
+          "name": "insights",
+          "tag": "localhost/claimspace/insights:1.0.0-amd64",
+          "architecture": "amd64",
+          "imageId": "3331b6395cc66a8424b1afdb354244aeb0961576972b90257e87e1eff31bbe25"
+        },
+        {
+          "name": "web",
+          "tag": "localhost/claimspace/web:1.0.0-amd64",
+          "architecture": "amd64",
+          "imageId": "2133b6dca22548ba01e271ced2c5dfa54bb7a79f30ae20fcc32273b412c42404"
+        }
+      ],
+      "sha256": "d9911a41929dfe5e7aa926c8720161afba5ddef98f58ab8d05e2b07c7c4f19ef"
+    }
+  }
+}

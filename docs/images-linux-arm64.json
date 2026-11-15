@@ -1,0 +1,26 @@
+{
+  "format": "docker-archive+gzip",
+  "applicationVersion": "1.0.0",
+  "architecture": "arm64",
+  "images": [
+    {
+      "name": "claims",
+      "tag": "localhost/claimspace/claims:1.0.0-arm64",
+      "architecture": "arm64",
+      "imageId": "9c2729c92be6b45d57a1366cff1840d21759b68acb8e3f851ab49f32e5871acb"
+    },
+    {
+      "name": "insights",
+      "tag": "localhost/claimspace/insights:1.0.0-arm64",
+      "architecture": "arm64",
+      "imageId": "456d8dcee05243b8fb31faa212732900501ec700c9c28088544ec903ffdfd5b0"
+    },
+    {
+      "name": "web",
+      "tag": "localhost/claimspace/web:1.0.0-arm64",
+      "architecture": "arm64",
+      "imageId": "6b2a9f28f097877e4920873093d658a27488237f0636354982752bcf526ce982"
+    }
+  ],
+  "sha256": "b3806e0d775d0b0204f5d2f6d36e9e3c610911b0c35ddf428d375fc2f960a0da"
+}

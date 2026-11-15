@@ -1,0 +1,22 @@
+Actual subsequent user inputs and decisions:
+
+1. Attached V2_FullStack_candidate_assessment_brief - FrontEnd BackEnd.docx:
+   "this is docx"
+
+2. AI asked whether PostgreSQL, Kafka, Podman/Compose and supporting federation/migration/serving/test libraries were acceptable.
+   User selected: "Approve these additions"
+
+3. AI presented the two-service claims/insights design and asked for approval.
+   User selected: "Approve the design and implement"
+
+4. User delegated remaining decisions:
+   "architecture and design do it as per you fele its best, later explain me the choices and all"
+
+5. User checked the backend stack:
+   "one question, your using java./springboot right?"
+   AI confirmed Java 21 and Spring Boot for both backend services.
+
+6. User:
+   "ok continue"
+
+These are real inputs. Architecture breakdowns and generated implementation were produced by the AI. This file does not represent additional human-authored prompts or line-by-line review.

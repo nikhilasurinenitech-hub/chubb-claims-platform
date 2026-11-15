@@ -33,3 +33,18 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Added client-error tests for missing required headers and malformed IDs, and reran the full backend suite: 17 tests passed.
 - Added a compacted Kafka topic so current snapshots can be replayed, atomic demo seeding, and health probes using a small Java class instead of adding shell utilities to runtime images.
 - Initial Dockerfile builds succeeded. Full-system browser, transport and recovery checks are next; no success has been claimed for these yet.
+
+## Full-system checks and a corrected failure assumption
+
+- Actual REST/Kafka smoke flow passed through Nginx: submission replay, claimant isolation, information response, assessment, approval, settlement and seven history entries. The outbox drained and reporting contained all six currencies separately.
+- All three production browser scenarios passed on native ARM64: settlement, rejection and mobile form/layout validation.
+- Stopped the actual Kafka container. A claim still committed and remained readable. After restarting Kafka, the exact claim appeared in the reporting projection at version 0.
+- Container recreation preserved claims and reporting data. A replay test then exposed a real proxy weakness: Nginx had resolved backend IPs only at startup. After Podman assigned a new insights IP, internal health was green but the public proxy returned 502.
+- AI replaced static upstream resolution with the container's runtime DNS resolver, a five-second cache, explicit upstream environment variables and a /tmp-rendered configuration. The same persistence/replay test then passed without restarting web; Kafka lag reached zero and SQL checksums were unchanged.
+- The generated OpenAPI document initially contained empty required arrays. The strict validator rejected them; the document was corrected and passed. An actual emitted snapshot also passed the versioned JSON event schema.
+- All 13 Kubernetes resources passed strict schema validation. No live Kubernetes cluster or remote GitHub Actions run was performed.
+- Exported Docker-format gzip archives for ARM64 and AMD64. The AMD64 application images passed all three browser scenarios under the VM's pre-existing QEMU emulator. This was emulated AMD64 execution, not a native Intel/AMD host.
+- Verified both database roles lack usage permission on the other service's schema.
+- Visual inspection covered desktop reporting, claimant information response and mobile layout. No clipping or horizontal overflow was found.
+- Audited the runtime data before cleanup: eight untouched seed claims and eight automated-test claims, with no unknown records. Backed up the fixtures and reset only this project. A fresh start produced eight claims, eight projections and no pending events.
+- The user has not yet completed a line-by-line review. These checks and corrections are AI work, not invented candidate overrides.

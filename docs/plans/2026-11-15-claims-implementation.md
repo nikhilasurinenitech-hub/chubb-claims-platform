@@ -8,6 +8,8 @@
 
 ---
 
+Implementation completed. Verification is recorded in docs/verification.json. During implementation, application contracts moved into service/Contracts.java, ClaimStore became the persistence port, shared errors moved into platform-common, and the Nginx configuration lives in frontend/. These refinements are explained in the journal and decisions.
+
 ### Task 1: Record design and initialise repository
 
 Files: `docs/plans/2026-11-15-claims-design.md`, this plan, `docs/ai-journal.md`, `prompts/001-user-request.txt`, `.gitignore`.
@@ -28,7 +30,7 @@ Files: `backend/claims-service/src/main/java/com/example/claims/domain/Claim.jav
 
 ### Task 3: Build transactional claims API
 
-Files: claims `api/ClaimController.java`, `api/ApiErrors.java`, `service/ClaimService.java`, `infrastructure/ClaimRepository.java`, `infrastructure/OutboxPublisher.java`, `src/main/resources/db/migration/V1__claims.sql`, `application.yml`, common security configuration; `openapi/claims.yaml`.
+Files: claims `api/ClaimController.java`, `backend/platform-common/src/main/java/com/example/platform/ApiErrors.java`, `service/ClaimService.java`, `infrastructure/ClaimRepository.java`, `infrastructure/OutboxPublisher.java`, `src/main/resources/db/migration/V1__claims.sql`, `application.yml`, common security configuration; `openapi/claims.yaml`.
 
 1. Define validated create/command DTOs, authenticated ownership and stable error contracts.
 2. Create Flyway schema with optimistic version and unique submission key constraints.
@@ -62,7 +64,7 @@ Files: `frontend/angular.json`, `frontend/projects/shell/src/app/`, `frontend/pr
 
 ### Task 6: Package and run full system
 
-Files: `docker-compose.yml`, backend/frontend `Dockerfile`, `deploy/nginx.conf`, `scripts/start.sh`, `scripts/stop.sh`, `scripts/export-images.sh`, `scripts/smoke.py`, `frontend/e2e/claims.spec.ts`, `.github/workflows/ci.yml`, `deploy/k8s/`.
+Files: `docker-compose.yml`, backend/frontend `Dockerfile`, `frontend/nginx.conf`, `scripts/start.sh`, `scripts/stop.sh`, `scripts/export-images.sh`, `scripts/smoke.py`, `frontend/e2e/claims.spec.ts`, `.github/workflows/ci.yml`, `deploy/k8s/`.
 
 1. Add PostgreSQL/Kafka health checks and persistent volumes, application images and same-origin web proxy.
 2. Build and start with `podman compose up --build -d`; verify readiness.

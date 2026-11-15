@@ -1,0 +1,11 @@
+Original user request, preserved as supplied:
+
+this is the jd, for full stack, core tech stack should be used for the project and also shared the arears of how the points will be assesed, i will also share the docx which project has what needs to be implemented, finally go through the video about how we should provide to them link the folder structure, also what i got to know is we should use the docker, maybe u can install podman as docker to run it, like we need to give the docker image to them, so they download and run in their local the project and check
+for this, you can consider the input anything from google, the tables and all
+but i need the end project that is unnable and i shoulkd be able to explain them
+just go through the images, docx and vidoes and give me the implementation and then tell me how to run and all
+also use angular frontend, java/springboot for backend, may be u can use sql databse
+for any other tech stack you can confirm with me, before implementing
+create this project in downloads folder by following the format in the video
+
+i want this project to be implementaed, also design decisions and planning are very important for the marks so please check and give
