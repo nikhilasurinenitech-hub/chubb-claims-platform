@@ -81,7 +81,7 @@ Feature state is small and local. Signals make loading, error, selection and pen
 The demonstration keeps credentials in memory. Production would use an appropriate identity provider and session/token lifecycle rather than persisting Basic credentials in browser storage.
 
 **How was AI used?**  
-AI generated the implementation and documentation. The user chose Angular/Java, approved the additions and service split, and delegated remaining design. Tests found real issues, including password encoder registration and proxy DNS after container IP changes. The journal distinguishes those AI corrections from actual human approvals. The candidate should add their own review notes after inspecting the code.
+AI generated the implementation and documentation. The user chose Angular/Java, approved the additions and service split, and delegated remaining design. Tests found real issues, including password encoder registration, proxy DNS after container IP changes and later-day fixture replay. The developer prompt set organises requirements, design, implementation and review questions; it was prepared after the initial build and is not a verbatim build transcript. The journal records actual corrections and checks. Add personal review notes only after inspecting the code and behaviour.
 
 **Why can average resolution show 0.0 hours?**  
 The fictional seed claims progress immediately at startup. The metric measures actual submission-to-final-decision time, which rounds to 0.0 hours for that instant fixture setup. Incident age is a different measure.
@@ -97,4 +97,5 @@ Prioritise real identity/TLS, policy validation and safe document handling; then
 - Explain why Kafka can lag while a claimant sees the committed result.
 - Locate the SQL schemas, migration, API and event contracts.
 - Read the AI-generated code and record any corrections in the journal.
+- Read the [developer prompt guide](../prompts/README.md), try its challenge questions and use the [review log template](../prompts/review-log-template.md) for completed reviews.
 - Be clear about what was actually executed locally and what remains a CI/Kubernetes reference.

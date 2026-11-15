@@ -148,7 +148,7 @@ frontend/projects/
 openapi/             HTTP and event contracts
 postman/             Executable API walkthrough collection
 docs/                Design, decisions, tests, AI journal and panel walkthrough
-prompts/             Actual user prompts and approvals
+prompts/             Developer prompts for planning, building and reviewing
 deploy/              Database bootstrap and Kubernetes reference
 scripts/             Start, stop, smoke and recovery helpers
 .github/workflows/   Backend, frontend and full-system CI
@@ -166,6 +166,8 @@ This follows the video's layered structure while retaining standard Maven source
 - [Design decisions](docs/decisions/README.md)
 - [Walkthrough and interview preparation](docs/walkthrough.md)
 - [Assessment evidence map](docs/rubric-mapping.md)
+- [Repository structure and video mapping](docs/repository-guide.md)
+- [Developer prompt guide](prompts/README.md)
 - [AI working journal](docs/ai-journal.md)
 - [API contract](openapi/claims.yaml)
 - [Image delivery](docs/image-delivery.md)

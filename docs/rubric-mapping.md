@@ -15,5 +15,5 @@ This maps the supplied scoring areas to inspectable evidence. It is not a predic
 | State management and data flow | 8 | Feature signals, typed HTTP facade, pending/error state, version-bearing commands and visible async refresh |
 | Theming, accessibility and UX | 8 | Shared responsive theme, labels, keyboard controls, focus styles, status/error announcements and mobile test |
 | Frontend functional completeness | 7 | Both personas and decisions exercised in production browser builds |
-| AI collaboration process | 25 | Original user prompts, real approvals, development commits, AI journal and documented corrections; candidate review remains the candidate's responsibility |
+| AI collaboration process | 25 | Twelve developer prompts with challenge questions and artifact links, dated AI journal, design decisions, development commits and documented corrections; the prompt guide states when the reusable set was prepared, and completed candidate reviews belong in the journal |
 | Total available | 135 | Evidence and limitations are recorded throughout the repository |

@@ -60,3 +60,14 @@ This is a chronological record of actual collaboration. The AI generated code an
 
 - After the later-day fix, all three browser scenarios passed again on native ARM64 and on the refreshed AMD64 images under QEMU. Both refreshed image archives passed load checks.
 - Restored the clean eight-claim demo from the Downloads repository after auditing and backing up only the four new automated-test records. The final verification record contains 18 backend tests, 10 component tests and 3 browser scenarios.
+
+## 16 November 2026 — Developer prompt documentation
+
+- The developer requested a prompt set written from a developer's perspective using the assessment brief, slides and repository video, instead of saved chat excerpts.
+- Re-read the video's visible captions and structure frames, including the instruction to save prompts around 01:00 and the prompts-folder guidance around 02:00. The supplied screenshot also highlights the journal of decisions and iterations.
+- Replaced the two chat-excerpt files in the current prompts folder with twelve focused developer prompts covering requirements/planning, architecture, domain/SQL, REST/security, Kafka/outbox, Angular federation/state, UX, tests, container delivery, debugging, collaboration evidence and panel preparation.
+- Each prompt includes a follow-up challenge and links to implemented artifacts. Added a reference/index guide, an unfilled developer review template and a mapping from the video's layout to conventional Maven/Angular paths.
+- The prompt guide identifies this as a reusable set prepared after the initial implementation. It does not turn the new prompts into a historical transcript or claim that template reviews were completed.
+- This update changes documentation only. Existing test results remain the previously recorded execution results; application images and saved user claims do not require changes.
+- Documentation checks passed for all twelve numbered prompts, 120 local Markdown links, balanced code fences and a documentation-only diff. Application test suites were not rerun for this documentation update.
+- Generated a self-contained HTML prompt guide for reading alongside the source ZIP. A headless browser checked twelve sections, 25 copyable developer/challenge blocks, internal navigation and desktop/mobile widths; screenshots were visually inspected.
