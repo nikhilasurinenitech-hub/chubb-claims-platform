@@ -79,3 +79,5 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Kept supplied-material references in the prompt index and moved the review-log template into docs so the prompts folder contains the prompts and their index.
 - This remains a documentation-only update; the dated journal continues to distinguish actual implementation and verification from the prepared prompt set.
 - Verified that the combined list exactly matches the twelve individual files and their thirteen follow-up prompts. All 53 local links in the changed Markdown passed; the updated HTML list passed desktop/mobile navigation and overflow checks.
+
+- Refined the prompt wording again into shorter, conversational developer requests with varied sentence structure and practical follow-up questions. The numbered files and combined list retain the same twelve topics.

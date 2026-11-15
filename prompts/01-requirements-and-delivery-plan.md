@@ -1,15 +1,13 @@
 # Requirements and delivery plan
 
 ```text
-I'm building the claims project described in the attached assessment brief. Please go through the brief, the assessment slides and the repository video first.
+I've attached the project brief, the assessment slides and the video showing the expected repo structure. Go through those first and help me work out what we need to build.
 
-We need Angular on the frontend and Java/Spring Boot on the backend. PostgreSQL and Kafka are also agreed. Summarise the main user journeys, what we must deliver, and anything the brief leaves open.
-
-Before writing code, give me a practical implementation plan. Prioritise a working end-to-end flow and the areas that carry more assessment points. Call out assumptions and anything we should leave out of this version.
+I want to use Angular, Java/Spring Boot and PostgreSQL. We need Kafka as well. Let's settle the scope and put together a rough plan before starting on the code.
 ```
 
 ## Follow-up prompts
 
 ```text
-This looks like a lot for a take-home. What is the smallest useful version we can finish properly, and what would you build first?
+What would you leave out if we're running short of time? I'd rather finish the main flow properly than have lots of half-working features.
 ```

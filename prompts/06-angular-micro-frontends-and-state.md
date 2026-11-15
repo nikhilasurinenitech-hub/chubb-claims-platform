@@ -1,15 +1,13 @@
 # Angular frontend and state
 
 ```text
-Build the Angular frontend for both user types in one workspace. Give the claimant and staff flows clear boundaries, with shared components where that makes sense.
+Time to connect the Angular app. We need a customer view and a staff view in the same application. The brief also mentions micro-frontends, so let's work out a shell and split the two features sensibly.
 
-The assessment mentions micro-frontends, so propose a sensible shell and feature structure without making the local setup difficult. Keep API calls and state handling easy to follow.
-
-Let's get the main workflow working first, including loading states, errors and refreshing data after an action.
+Share the bits that are actually common. For now, focus on getting a claim through the screens and keep the state handling easy to follow.
 ```
 
 ## Follow-up prompts
 
 ```text
-Is the shared code doing too much? Keep business decisions on the backend, and check that moving between pages does not leave polling or stale state behind.
+What happens to the selected claim after an update or refresh? Check for stale details, and make sure leaving the page stops any background polling.
 ```

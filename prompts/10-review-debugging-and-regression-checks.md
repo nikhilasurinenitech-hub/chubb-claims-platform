@@ -1,17 +1,17 @@
 # Review and debugging
 
 ```text
-Please review what we have before the final handoff. Look for bugs in permissions, status changes, concurrent updates, error handling and data consistency.
+Before we call this finished, go back through the code and look for things we've missed. Start with anything that could let the wrong person update a claim, lose data or leave a claim in the wrong state.
 
-Start with the most important findings and point me to the relevant code. For a confirmed issue, reproduce it, make a focused fix and add a regression check where it helps. Avoid a broad rewrite just to change the style.
+Show me the issues in order of importance. Fix confirmed bugs one at a time and check the fix, rather than doing a big refactor at this stage.
 ```
 
 ## Follow-up prompts
 
 ```text
-The service health checks pass, but a request through the browser fails after a container restart. Trace the full request path before changing the application logic.
+If the containers are healthy but the browser gets an error after a restart, where would you look first? Trace the request through the proxy as well.
 ```
 
 ```text
-Check startup and sample-data loading as well. Will this still work after another restart tomorrow? Keep the claims already entered in the running demo.
+Check that the sample data loads safely on later restarts too. Don't clear the claims we've already entered to get it working.
 ```

@@ -1,15 +1,13 @@
 # Docker images and local setup
 
 ```text
-Make the project easy for the examiner to run using Docker or Podman. They should not need to install Java or Node separately.
+I need to hand this over so someone else can run it on their laptop. Set it up with Docker images and Compose, and make sure it also works with Podman on my Mac. They shouldn't need Java or Node installed separately.
 
-Include Compose, startup checks and persistent storage. Give me a source-build option and a way to load the prepared images. Account for Apple Silicon and Intel/AMD machines.
-
-Write clear commands in the README for starting, checking logs, stopping and restarting. Please verify the instructions against the packaged project.
+Add the commands to the README and try them from the packaged project. Keep the database data when the containers are stopped and started again.
 ```
 
 ## Follow-up prompts
 
 ```text
-What exactly do I need to send the examiner? Check what is inside the image bundle, what still gets downloaded, and whether saved claims survive a restart.
+What files do I send them, and will the same images work on an Intel laptop and an Apple Silicon Mac?
 ```

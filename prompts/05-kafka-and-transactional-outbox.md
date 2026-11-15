@@ -1,13 +1,13 @@
 # Kafka and reporting
 
 ```text
-Now connect claim changes to the reporting side through Kafka. Reporting can update a little later, but saving a valid claim should not fail just because Kafka is unavailable.
+Let's hook up reporting through Kafka. My main concern is what happens if we save a claim and then fail to publish the message. How should we handle that?
 
-Suggest a reliable way to handle that database-and-message boundary. Account for retries, repeated messages and messages arriving out of order. Then implement the approach and explain how we would recover reporting after a failure.
+Reporting can be a little behind, but we shouldn't lose the claim or count it twice when a message gets retried. Suggest an approach and talk me through the failure cases before implementing it.
 ```
 
 ## Follow-up prompts
 
 ```text
-Suppose the claim is saved but publishing fails. Or the message is published twice. Walk me through what happens in our implementation and how we can check it.
+Can we test this by stopping Kafka, saving a claim and then bringing Kafka back? Check that the same claim eventually shows up in reporting.
 ```

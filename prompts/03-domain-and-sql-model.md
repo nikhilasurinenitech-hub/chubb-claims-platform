@@ -1,15 +1,13 @@
 # Domain and SQL model
 
 ```text
-Start with the claim model and its lifecycle. We need claimants to report incidents, officers to pick up and assess claims, an information-request loop, and a final settlement or rejection.
+Let's start with the backend model. A customer reports a claim, someone from the claims team picks it up, and they may need to ask the customer for more information before deciding.
 
-Suggest the tables and relationships, then implement the model and database migrations. Keep the status rules in the backend. Think about ownership, assignment, history and money values, including the different currencies.
-
-Please explain the important rules before wiring this into controllers or screens.
+Work out the tables and status changes around that flow. We'll also need the history of what happened to each claim. Show me the model first, then add the migrations and business rules.
 ```
 
 ## Follow-up prompts
 
 ```text
-What invalid status changes could slip through if someone calls the API directly? Also, are we keeping the requested amount, assessed reserve and final settlement separate?
+One thing to check: the amount requested, the reserve and the final settlement aren't necessarily the same. Are we handling that, including different currencies?
 ```

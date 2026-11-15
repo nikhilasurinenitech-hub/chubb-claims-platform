@@ -1,15 +1,13 @@
 # Testing the important flows
 
 ```text
-Add meaningful tests around the important behaviour rather than testing every getter or copying the implementation into assertions.
+Let's add tests around the parts most likely to break: status changes, permissions, duplicate submissions and two people updating the same claim. I'd also like a browser test for the customer-to-staff flow.
 
-Cover the claim lifecycle, permissions, duplicate requests and conflicting updates. Include database integration checks and frontend tests for the key journeys. We should also check that Kafka updates reporting correctly.
-
-Run the relevant tests, fix any failures, and summarise what was actually verified and what remains untested.
+Use real database checks where mocks would hide a problem. Run the tests and tell me what's covered and what we still haven't checked.
 ```
 
 ## Follow-up prompts
 
 ```text
-Which failures would our unit tests miss? Pick the highest-risk integration gaps and suggest a practical way to test them.
+Have we actually checked the Kafka connection, or just tested our own code with mocked messages?
 ```

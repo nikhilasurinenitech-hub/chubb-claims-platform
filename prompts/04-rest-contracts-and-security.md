@@ -1,15 +1,13 @@
 # REST contracts and security
 
 ```text
-Let's add the APIs for the claimant and staff flows. Keep the endpoints and response shapes consistent and document them in OpenAPI.
+Can you add the APIs for these flows now? Keep them consistent and update the API docs alongside the code. Customers should only see their own claims, and staff shouldn't be able to change a claim assigned to someone else.
 
-Make sure a claimant only sees their own claims and an officer can only progress work assigned to them. Validate requests on the server and return useful errors.
-
-Also think through duplicate submissions and two people trying to update the same claim. Explain how the frontend should handle those cases.
+Also check what happens if someone clicks Submit twice, or two officers try to pick up the same claim.
 ```
 
 ## Follow-up prompts
 
 ```text
-Check the API without relying on the UI restrictions. What happens if I try another claimant's ID, use the wrong role, or submit an update from an old screen?
+Try calling those endpoints directly with the wrong user. I want to make sure the permissions hold even without the frontend checks.
 ```

@@ -3,189 +3,169 @@
 ## 01. Requirements and delivery plan
 
 ```text
-I'm building the claims project described in the attached assessment brief. Please go through the brief, the assessment slides and the repository video first.
+I've attached the project brief, the assessment slides and the video showing the expected repo structure. Go through those first and help me work out what we need to build.
 
-We need Angular on the frontend and Java/Spring Boot on the backend. PostgreSQL and Kafka are also agreed. Summarise the main user journeys, what we must deliver, and anything the brief leaves open.
-
-Before writing code, give me a practical implementation plan. Prioritise a working end-to-end flow and the areas that carry more assessment points. Call out assumptions and anything we should leave out of this version.
+I want to use Angular, Java/Spring Boot and PostgreSQL. We need Kafka as well. Let's settle the scope and put together a rough plan before starting on the code.
 ```
 
 ### Follow-up prompts
 
 ```text
-This looks like a lot for a take-home. What is the smallest useful version we can finish properly, and what would you build first?
+What would you leave out if we're running short of time? I'd rather finish the main flow properly than have lots of half-working features.
 ```
 
 ## 02. Architecture and design decisions
 
 ```text
-Let's work out the architecture before we start implementing. Would you keep this as one application or split it into a small number of services?
+How would you structure this? I'm considering separate services for claims and reporting, but I'd like to understand whether that's worth the extra setup. Compare that with keeping everything in one application.
 
-Compare the options for this project and explain the trade-offs. We need REST and Kafka, but I want both to have a clear purpose. Show the main components, who owns the data, and how a claim moves through the system.
-
-Keep the structure straightforward and write down the decisions so I can explain them later.
+Sketch the design and explain where REST and Kafka fit. Write down why we're choosing this approach so I can come back to it later.
 ```
 
 ### Follow-up prompts
 
 ```text
-Can we simplify this further? Which parts really benefit from being separate, and which parts should stay together?
+Do we need all these components for this project? Have another look and see what we can simplify.
 ```
 
 ## 03. Domain and SQL model
 
 ```text
-Start with the claim model and its lifecycle. We need claimants to report incidents, officers to pick up and assess claims, an information-request loop, and a final settlement or rejection.
+Let's start with the backend model. A customer reports a claim, someone from the claims team picks it up, and they may need to ask the customer for more information before deciding.
 
-Suggest the tables and relationships, then implement the model and database migrations. Keep the status rules in the backend. Think about ownership, assignment, history and money values, including the different currencies.
-
-Please explain the important rules before wiring this into controllers or screens.
+Work out the tables and status changes around that flow. We'll also need the history of what happened to each claim. Show me the model first, then add the migrations and business rules.
 ```
 
 ### Follow-up prompts
 
 ```text
-What invalid status changes could slip through if someone calls the API directly? Also, are we keeping the requested amount, assessed reserve and final settlement separate?
+One thing to check: the amount requested, the reserve and the final settlement aren't necessarily the same. Are we handling that, including different currencies?
 ```
 
 ## 04. REST contracts and security
 
 ```text
-Let's add the APIs for the claimant and staff flows. Keep the endpoints and response shapes consistent and document them in OpenAPI.
+Can you add the APIs for these flows now? Keep them consistent and update the API docs alongside the code. Customers should only see their own claims, and staff shouldn't be able to change a claim assigned to someone else.
 
-Make sure a claimant only sees their own claims and an officer can only progress work assigned to them. Validate requests on the server and return useful errors.
-
-Also think through duplicate submissions and two people trying to update the same claim. Explain how the frontend should handle those cases.
+Also check what happens if someone clicks Submit twice, or two officers try to pick up the same claim.
 ```
 
 ### Follow-up prompts
 
 ```text
-Check the API without relying on the UI restrictions. What happens if I try another claimant's ID, use the wrong role, or submit an update from an old screen?
+Try calling those endpoints directly with the wrong user. I want to make sure the permissions hold even without the frontend checks.
 ```
 
 ## 05. Kafka and reporting
 
 ```text
-Now connect claim changes to the reporting side through Kafka. Reporting can update a little later, but saving a valid claim should not fail just because Kafka is unavailable.
+Let's hook up reporting through Kafka. My main concern is what happens if we save a claim and then fail to publish the message. How should we handle that?
 
-Suggest a reliable way to handle that database-and-message boundary. Account for retries, repeated messages and messages arriving out of order. Then implement the approach and explain how we would recover reporting after a failure.
+Reporting can be a little behind, but we shouldn't lose the claim or count it twice when a message gets retried. Suggest an approach and talk me through the failure cases before implementing it.
 ```
 
 ### Follow-up prompts
 
 ```text
-Suppose the claim is saved but publishing fails. Or the message is published twice. Walk me through what happens in our implementation and how we can check it.
+Can we test this by stopping Kafka, saving a claim and then bringing Kafka back? Check that the same claim eventually shows up in reporting.
 ```
 
 ## 06. Angular frontend and state
 
 ```text
-Build the Angular frontend for both user types in one workspace. Give the claimant and staff flows clear boundaries, with shared components where that makes sense.
+Time to connect the Angular app. We need a customer view and a staff view in the same application. The brief also mentions micro-frontends, so let's work out a shell and split the two features sensibly.
 
-The assessment mentions micro-frontends, so propose a sensible shell and feature structure without making the local setup difficult. Keep API calls and state handling easy to follow.
-
-Let's get the main workflow working first, including loading states, errors and refreshing data after an action.
+Share the bits that are actually common. For now, focus on getting a claim through the screens and keep the state handling easy to follow.
 ```
 
 ### Follow-up prompts
 
 ```text
-Is the shared code doing too much? Keep business decisions on the backend, and check that moving between pages does not leave polling or stale state behind.
+What happens to the selected claim after an update or refresh? Check for stale details, and make sure leaving the page stops any background polling.
 ```
 
 ## 07. User experience and accessibility
 
 ```text
-The main screens are working. Please review the UI and make it feel consistent and easy to use.
-
-Focus on the claim form, the staff workqueue and the claim history. Make the next action clear, improve validation and empty/error states, and check keyboard access and smaller screens. Keep entered text when a request fails.
+Can you tidy up the screens now? The forms and claim history should be easy to follow, with a clear next step. Check it on a smaller screen and with the keyboard too. If a request fails, keep what the user has typed and show an error they can act on.
 ```
 
 ### Follow-up prompts
 
 ```text
-The dashboard numbers might be confusing. Can we make it clear what Open, Waiting and Closed mean, and why reporting may take a moment to update?
+The workload numbers need a clearer explanation. Waiting is part of Open, right? Make sure that comes across and that users know reporting can take a moment to catch up.
 ```
 
 ## 08. Testing the important flows
 
 ```text
-Add meaningful tests around the important behaviour rather than testing every getter or copying the implementation into assertions.
+Let's add tests around the parts most likely to break: status changes, permissions, duplicate submissions and two people updating the same claim. I'd also like a browser test for the customer-to-staff flow.
 
-Cover the claim lifecycle, permissions, duplicate requests and conflicting updates. Include database integration checks and frontend tests for the key journeys. We should also check that Kafka updates reporting correctly.
-
-Run the relevant tests, fix any failures, and summarise what was actually verified and what remains untested.
+Use real database checks where mocks would hide a problem. Run the tests and tell me what's covered and what we still haven't checked.
 ```
 
 ### Follow-up prompts
 
 ```text
-Which failures would our unit tests miss? Pick the highest-risk integration gaps and suggest a practical way to test them.
+Have we actually checked the Kafka connection, or just tested our own code with mocked messages?
 ```
 
 ## 09. Docker images and local setup
 
 ```text
-Make the project easy for the examiner to run using Docker or Podman. They should not need to install Java or Node separately.
+I need to hand this over so someone else can run it on their laptop. Set it up with Docker images and Compose, and make sure it also works with Podman on my Mac. They shouldn't need Java or Node installed separately.
 
-Include Compose, startup checks and persistent storage. Give me a source-build option and a way to load the prepared images. Account for Apple Silicon and Intel/AMD machines.
-
-Write clear commands in the README for starting, checking logs, stopping and restarting. Please verify the instructions against the packaged project.
+Add the commands to the README and try them from the packaged project. Keep the database data when the containers are stopped and started again.
 ```
 
 ### Follow-up prompts
 
 ```text
-What exactly do I need to send the examiner? Check what is inside the image bundle, what still gets downloaded, and whether saved claims survive a restart.
+What files do I send them, and will the same images work on an Intel laptop and an Apple Silicon Mac?
 ```
 
 ## 10. Review and debugging
 
 ```text
-Please review what we have before the final handoff. Look for bugs in permissions, status changes, concurrent updates, error handling and data consistency.
+Before we call this finished, go back through the code and look for things we've missed. Start with anything that could let the wrong person update a claim, lose data or leave a claim in the wrong state.
 
-Start with the most important findings and point me to the relevant code. For a confirmed issue, reproduce it, make a focused fix and add a regression check where it helps. Avoid a broad rewrite just to change the style.
+Show me the issues in order of importance. Fix confirmed bugs one at a time and check the fix, rather than doing a big refactor at this stage.
 ```
 
 ### Follow-up prompts
 
 ```text
-The service health checks pass, but a request through the browser fails after a container restart. Trace the full request path before changing the application logic.
+If the containers are healthy but the browser gets an error after a restart, where would you look first? Trace the request through the proxy as well.
 ```
 
 ```text
-Check startup and sample-data loading as well. Will this still work after another restart tomorrow? Keep the claims already entered in the running demo.
+Check that the sample data loads safely on later restarts too. Don't clear the claims we've already entered to get it working.
 ```
 
 ## 11. Design notes and AI journal
 
 ```text
-Update the project documentation as we go. I need the plan, important design choices, assumptions and AI-assisted iterations to be easy to find.
+Let's bring the docs up to date. Keep a short record of the choices we made, what changed along the way and any AI suggestions we had to correct. Link the assessment requirements to the relevant parts of the project so the reviewer can find them.
 
-Record what changed, why we changed it, and the checks we actually ran. Include mistakes and corrections when they explain an important decision. Keep the prompt files separate from the implementation journal.
-
-Finally, map the assessment areas to the relevant code or evidence so the reviewer can navigate the project.
+Only list checks we've actually run. Anything still planned should be clear about that.
 ```
 
 ### Follow-up prompts
 
 ```text
-Review the documentation for claims stronger than the evidence. Make sure it is clear what works locally, what was only validated statically, and what is future work.
+Does the README still match the app? Check the setup steps and remove anything that makes the project sound more complete than it is.
 ```
 
 ## 12. Walkthrough and interview preparation
 
 ```text
-Help me prepare a walkthrough of the finished project. Start with the business problem and demonstrate a claim from submission to a final decision using the two user roles.
+I need to be able to explain this in the interview. Walk me through one claim, from entering it in Angular to saving it in the backend and updating the dashboard. Show me the relevant code as we go.
 
-Then follow one action through the frontend, backend, database and reporting flow. Explain the main design choices and the alternatives we considered in plain language.
-
-Give me likely technical questions based on our actual implementation, and point out the areas I should understand well before the interview.
+Then help me prepare for questions about the design choices, what could go wrong and what I'd change for a production system.
 ```
 
 ### Follow-up prompts
 
 ```text
-Ask me the questions one at a time. If my explanation misses something, point me to the relevant code and help me work through it.
+Ask me one question at a time. If I miss something, help me find it in the code rather than just giving me an answer to memorise.
 ```
