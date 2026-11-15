@@ -81,3 +81,4 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Verified that the combined list exactly matches the twelve individual files and their thirteen follow-up prompts. All 53 local links in the changed Markdown passed; the updated HTML list passed desktop/mobile navigation and overflow checks.
 
 - Refined the prompt wording again into shorter, conversational developer requests with varied sentence structure and practical follow-up questions. The numbered files and combined list retain the same twelve topics.
+- Reordered the first prompt to introduce the claims application, its two user types and the intended stack before requesting a review of the brief, slides and repository video and a proposed plan.
