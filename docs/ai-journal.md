@@ -89,3 +89,9 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Standardised the archive location: extract the source ZIP beside the chosen archive and run from the extracted project folder, using ../ for the archive path.
 - Explained image importing, Compose, background startup, runtime prerequisites, first-use downloads and later restarts. Kept separate-command instructions for terminals without && support.
 - Updated packaging to refresh the source ZIP and run instructions in the existing ignored submission folder, so the copies shared from Downloads stay in sync with the delivery outputs.
+
+## Repository publication preparation
+
+- Preserved the existing local edits consolidating the developer prompts into prompts/ALL-PROMPTS.md and removing the individual prompt files and their index.
+- Updated the README, walkthrough, repository guide, evidence map and implementation-plan references to the consolidated file. No application code, schema or container configuration changed.
+- Checked the tracked file set and Git history for accidentally included image archives and generated dependencies. The prepared images and submission ZIP remain outside source control under the ignored artifacts folder.

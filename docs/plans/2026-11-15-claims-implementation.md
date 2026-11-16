@@ -12,7 +12,7 @@ Implementation completed. Verification is recorded in docs/verification.json. Du
 
 ### Task 1: Record design and initialise repository
 
-Files: `docs/plans/2026-11-15-claims-design.md`, this plan, `docs/ai-journal.md`, `prompts/README.md`, `.gitignore`. The prompt guide describes the final organisation of the developer prompt set.
+Files: `docs/plans/2026-11-15-claims-design.md`, this plan, `docs/ai-journal.md`, `prompts/ALL-PROMPTS.md`, `.gitignore`. The prompt file contains the consolidated developer prompt list.
 
 1. Save approved boundaries and acceptance criteria.
 2. Record original prompts and real approvals, with source requirements distinguished from user instructions.

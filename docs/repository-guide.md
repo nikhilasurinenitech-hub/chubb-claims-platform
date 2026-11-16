@@ -17,7 +17,7 @@ The repository follows the supplied video's recommended responsibilities while r
 | `openapi/` | [API contract](../openapi/claims.yaml) and event schema in root `openapi/` | Frontend/backend and event boundaries |
 | `docker-compose.yml` | [Root Compose](../docker-compose.yml), backend/frontend Dockerfiles, `release/` | Source builds and supplied-image startup |
 | `NOTES.md` | [Assumptions](../NOTES.md), [design decisions](decisions/README.md) | Scope, rationale and trade-offs |
-| `prompts/` | [Developer prompts](../prompts/README.md) and twelve numbered prompts | Planning, implementation, challenge and verification instructions |
+| `prompts/` | [Developer prompts](../prompts/ALL-PROMPTS.md) | Planning, implementation, challenge and verification instructions |
 | AI journal | [AI working journal](ai-journal.md) | Real iterations, corrections and check outcomes |
 
 The prompts and journal are separate: prompts guide the work; the journal records what happened. The AI journal records when the developer prompt set was prepared and revised.
@@ -35,4 +35,4 @@ The prompts and journal are separate: prompts guide the work; the journal record
 2. Read the requirements, approved plan, architecture and decision records.
 3. Follow one claim action through the domain, service, adapter and event projection.
 4. Inspect and run the relevant tests using [testing.md](testing.md).
-5. Use the [prompt guide](../prompts/README.md), journal and [walkthrough](walkthrough.md) to discuss AI direction, verification and remaining scope.
+5. Use the [prompt list](../prompts/ALL-PROMPTS.md), journal and [walkthrough](walkthrough.md) to discuss AI direction, verification and remaining scope.

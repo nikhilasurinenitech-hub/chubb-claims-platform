@@ -189,9 +189,9 @@ This follows the video's layered structure while retaining standard Maven source
 - [Walkthrough and interview preparation](docs/walkthrough.md)
 - [Assessment evidence map](docs/rubric-mapping.md)
 - [Repository structure and video mapping](docs/repository-guide.md)
-- [Developer prompts](prompts/README.md)
+- [Developer prompts](prompts/ALL-PROMPTS.md)
 - [AI working journal](docs/ai-journal.md)
 - [API contract](openapi/claims.yaml)
 - [Image delivery](docs/image-delivery.md)
 
-The GitHub Actions workflow is included for a future repository push. Kubernetes manifests are a deployment reference; Compose is the locally verified runtime. No GitHub repository or image registry has been published from this chat.
+The GitHub Actions workflow runs verification on pushes to main and pull requests. Check the repository's Actions tab for remote execution results. Kubernetes manifests are a deployment reference; Compose is the locally verified runtime. Prepared application images are supplied as Docker-format archives.
