@@ -98,3 +98,6 @@ This is a chronological record of actual collaboration. The AI generated code an
 
 - Published the existing main-branch history to https://github.com/nikhilasurinenitech-hub/chubb-claims-platform with public visibility. Preserved the consolidated prompt file byte-for-byte.
 - Added a release-download link and refreshed the named source ZIP so the Docker image bundles can be distributed alongside the exact source and instructions. The application image contents are unchanged from the previously verified release build.
+
+- The first real GitHub workflow passed its earlier build/test steps but failed container startup: Kafka could not write bootstrap.checkpoint.tmp on a fresh Docker named volume. The captured runner logs showed AccessDeniedException; this differed from the previously successful Podman volume setup.
+- Checked the official Kafka 4.1.0 image Dockerfile and changed Compose and the Kubernetes reference to use its existing appuser-owned /var/lib/kafka/data directory. The named volume is unchanged. No local user database or running service was reset, and no compiled application image changed. ADR 012 records the reason and the workflow exercises the fresh Docker regression.

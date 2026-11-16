@@ -59,6 +59,6 @@ Container recreation with persistent volumes and Kafka offset replay are also ch
 
 ## Validation limits
 
-GitHub Actions is provided but has not been executed remotely because this repository has not been pushed. All 13 Kubernetes resources passed strict kubeconform schema validation; no live cluster is claimed. ARM64 is the native local test platform. All three browser scenarios also passed against AMD64 application images running through QEMU in the ARM64 VM. This is emulated AMD64 validation, not a native Intel/AMD machine test.
+GitHub Actions now executes on the public repository. The first remote run exposed a fresh Docker volume-ownership failure in Kafka; ADR 012 records the correction. Current job results are available in the [Actions tab](https://github.com/nikhilasurinenitech-hub/chubb-claims-platform/actions). All 13 Kubernetes resources passed strict kubeconform schema validation; no live cluster is claimed. ARM64 is the native local test platform. All three browser scenarios also passed against AMD64 application images running through QEMU in the ARM64 VM. This is emulated AMD64 validation, not a native Intel/AMD machine test.
 
 Performance/load tests, formal accessibility auditing, production identity integration, actual payment processing and multi-node failure tests are outside this assessment scope.

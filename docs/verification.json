@@ -109,7 +109,7 @@
     "invalid": 0,
     "deployedToLiveCluster": false
   },
-  "remoteCiExecuted": false,
+  "remoteCiExecuted": true,
   "publication": {
     "githubRepositoryPublished": true,
     "imageRegistryPushed": false,
@@ -169,5 +169,13 @@
       ],
       "sha256": "d181dcb4c0e147a92a5a54350b595ee260b2c386a04ed7ddcdfaa1746c8eae76"
     }
+  },
+  "remoteCi": {
+    "actionsUrl": "https://github.com/nikhilasurinenitech-hub/chubb-claims-platform/actions",
+    "firstRunUrl": "https://github.com/nikhilasurinenitech-hub/chubb-claims-platform/actions/runs/43856491510",
+    "firstRunConclusion": "failure",
+    "firstRunFailure": "Kafka AccessDeniedException on a fresh Docker named volume at /tmp/kraft-combined-logs",
+    "correction": "Use the official image-owned /var/lib/kafka/data directory for the same persistent volume; see ADR 012.",
+    "currentResults": "See the Actions URL for the job corresponding to the desired commit."
   }
 }

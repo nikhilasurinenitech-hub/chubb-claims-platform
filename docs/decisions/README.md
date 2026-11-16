@@ -49,3 +49,13 @@ A persistence/replay test exposed stale Nginx upstream addresses after Podman ch
 ## ADR 012 Deterministic demo fixture payloads
 
 A final review found that fixed seed idempotency keys were paired with dates calculated from the current day. A PostgreSQL regression advancing the application clock reproduced a later-day conflict. Fixture incident dates now use a fixed assessment anchor, while live claim validation and audit timestamps still use the clock. The same key therefore represents the same fixture payload on every restart. Intentional fixture changes require a new fixture-key version.
+
+## ADR 012 Kafka volume ownership across container engines
+
+The first GitHub-hosted Docker run exposed an AccessDeniedException while Kafka formatted a fresh volume mounted at /tmp/kraft-combined-logs. The local Podman-created volume had allowed the same configuration to start, so local verification alone did not establish fresh Docker portability.
+
+Mount the existing kafka-data volume at /var/lib/kafka/data and set KAFKA_LOG_DIRS to that same directory. The official Kafka 4.1.0 image creates this directory for appuser and declares it as a volume. Docker can therefore initialise a fresh named volume with the image's directory ownership. Kafka continues running as its normal non-root user.
+
+The named volume and its contents are retained; only its mount location inside the container changes. No data reset, extra service, root Kafka process or custom application image is required. Kubernetes uses the same directory with its existing filesystem-group configuration. Fresh Docker startup, API/Kafka smoke and browser scenarios are exercised by the GitHub workflow.
+
+Reference: [official Kafka 4.1.0 Dockerfile](https://github.com/apache/kafka/blob/4.1.0/docker/jvm/Dockerfile).
