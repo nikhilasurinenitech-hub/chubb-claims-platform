@@ -95,3 +95,6 @@ This is a chronological record of actual collaboration. The AI generated code an
 - Preserved the existing local edits consolidating the developer prompts into prompts/ALL-PROMPTS.md and removing the individual prompt files and their index.
 - Updated the README, walkthrough, repository guide, evidence map and implementation-plan references to the consolidated file. No application code, schema or container configuration changed.
 - Checked the tracked file set and Git history for accidentally included image archives and generated dependencies. The prepared images and submission ZIP remain outside source control under the ignored artifacts folder.
+
+- Published the existing main-branch history to https://github.com/nikhilasurinenitech-hub/chubb-claims-platform with public visibility. Preserved the consolidated prompt file byte-for-byte.
+- Added a release-download link and refreshed the named source ZIP so the Docker image bundles can be distributed alongside the exact source and instructions. The application image contents are unchanged from the previously verified release build.

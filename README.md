@@ -2,6 +2,8 @@
 
 A runnable motor and property claims platform with an Angular frontend, Java 21 / Spring Boot backend, PostgreSQL storage and Kafka-driven team reporting. Claimants and claims officers use one web application.
 
+[Public source repository](https://github.com/nikhilasurinenitech-hub/chubb-claims-platform) · [Download the runnable release](https://github.com/nikhilasurinenitech-hub/chubb-claims-platform/releases/tag/v1.0.0)
+
 The complete workflow is implemented: submit, pick up, request and supply information, assess, approve, settle or reject, and track the decision. Settlement records a decision; it does not transfer money. All data and identities are fictional assessment fixtures.
 
 ## Start locally

@@ -2,6 +2,8 @@
 
 The application consists of three application images plus standard PostgreSQL and Kafka images. Compose describes how they connect and supplies the local demonstration configuration.
 
+The prepared source ZIP, both architecture bundles, checksums and run instructions are available from the [GitHub release](https://github.com/nikhilasurinenitech-hub/chubb-claims-platform/releases/tag/v1.0.0).
+
 ## Build directly from source
 
 Run docker compose up --build -d or podman compose up --build -d from the repository root. The build uses the host runtime's Linux architecture. Host Java and Node are not required.

@@ -1,5 +1,9 @@
 CLAIMSPACE — START FROM THE SUPPLIED DOCKER IMAGES
 
+PUBLIC PROJECT LINKS
+Repository: https://github.com/nikhilasurinenitech-hub/chubb-claims-platform
+Downloads: https://github.com/nikhilasurinenitech-hub/chubb-claims-platform/releases/tag/v1.0.0
+
 WHAT TO SEND
 Send claimspace-project.zip and ONE image archive:
 - Intel/AMD Windows, Linux or Intel Mac: claimspace-images-linux-amd64.tar.gz

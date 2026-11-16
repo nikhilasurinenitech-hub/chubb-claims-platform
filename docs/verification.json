@@ -111,8 +111,10 @@
   },
   "remoteCiExecuted": false,
   "publication": {
-    "githubRepositoryPublished": false,
-    "imageRegistryPushed": false
+    "githubRepositoryPublished": true,
+    "imageRegistryPushed": false,
+    "repositoryUrl": "https://github.com/nikhilasurinenitech-hub/chubb-claims-platform",
+    "repositoryVerifiedAtUtc": "2026-11-16T11:20:14.311143+00:00"
   },
   "images": {
     "arm64": {
